@@ -31,7 +31,7 @@ The official documentation is hosted on Read the Docs: https://stock_analyzer.re
 We welcome and recognize all contributions. You can see a list of current contributors in the [contributors tab](https://github.com/UBC-MDS/stock_analyzer/graphs/contributors).
 
 - Kangyu (Mark) Wang 
-- Sicheng (Marc) Kim
+- Sicheng (Marc) Sun
 - William (Yihang) Xu 
 - Tingyu Zhang
 
