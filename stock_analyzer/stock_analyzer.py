@@ -88,3 +88,59 @@ def visualizeMovingAverage(data,name,window,method=movingAverage):
 # df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
 # # Show the data
 # visualizeMovingAverage(df,'High', 300)
+
+
+def exponential_smoothing(St_prev,yt, alpha=0.3):
+
+  """Perform one iteration of single exponentiel smoothing
+
+    Parameters
+    ----------
+    St_prev : float 
+        previous state, prediction calculated from last iteration
+        
+    yt : float
+        the new observation
+
+    alpha : float
+        hyperparameter
+
+    Returns
+    -------
+    St: float
+        updated state(prediction)
+  """
+
+
+  St= alpha*yt+St_prev*(1-alpha)
+  return St
+
+
+
+def exponential_smoothing_series(Serie, alpha=0.3):
+
+  """Perform single exponential smoothing prediction for univariate time serie
+
+    Parameters
+    ----------
+    Serie : list, numpy array，pandas serie'
+        a list of numbers in chronological order
+        
+    alpha : float between 0 and 1
+        hyperparameter
+
+    Returns
+    -------
+    pred: numpy array
+        prediction calculated using single exponential smoothing method
+  """
+
+  pred=[]
+  St_prev=Serie[0]
+  for i in range(len(Serie)):
+
+    yt=Serie[i]
+    St= exponential_smoothing(St_prev=St_prev, yt=yt,alpha=alpha)
+    pred.append(St)
+    St_prev=St
+  return pred
