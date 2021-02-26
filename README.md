@@ -30,6 +30,11 @@ The official documentation is hosted on Read the Docs: https://stock_analyzer.re
 
 We welcome and recognize all contributions. You can see a list of current contributors in the [contributors tab](https://github.com/UBC-MDS/stock_analyzer/graphs/contributors).
 
+- Kangyu (Mark) Wang 
+- Sicheng (Marc) Sun
+- William (Yihang) Xu 
+- Tingyu Zhang
+
 ### Credits
 
 This package was created with Cookiecutter and the UBC-MDS/cookiecutter-ubc-mds project template, modified from the [pyOpenSci/cookiecutter-pyopensci](https://github.com/pyOpenSci/cookiecutter-pyopensci) project template and the [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage).
