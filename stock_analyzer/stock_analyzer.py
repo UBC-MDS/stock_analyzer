@@ -178,29 +178,29 @@ def visualizeMovingAverage(data, name, window, method=movingAverage):
 # visualizeMovingAverage(df,'High', 300)
 
 
-def exponential_smoothing(St_prev, yt, alpha=0.3):
+# def exponential_smoothing(St_prev, yt, alpha=0.3):
 
-    """Perform one iteration of single exponentiel smoothing
+#     """Perform one iteration of single exponentiel smoothing
 
-    Parameters
-    ----------
-    St_prev : float
-        previous state, prediction calculated from last iteration
+#     Parameters
+#     ----------
+#     St_prev : float
+#         previous state, prediction calculated from last iteration
 
-    yt : float
-        the new observation
+#     yt : float
+#         the new observation
 
-    alpha : float
-        hyperparameter
+#     alpha : float
+#         hyperparameter
 
-    Returns
-    -------
-    St: float
-        updated state(prediction)
-    """
+#     Returns
+#     -------
+#     St: float
+#         updated state(prediction)
+#     """
 
-    St = alpha * yt + St_prev * (1 - alpha)
-    return St
+#     St = alpha * yt + St_prev * (1 - alpha)
+#     return St
 
 
 def exponentialSmoothing(data, newColumnNames, alpha=0.3):
@@ -256,7 +256,7 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         St_prev = values[0]
         for i in range(len(values)):
             yt = values[i]
-            St = exponential_smoothing(St_prev=St_prev, yt=yt, alpha=alpha)
+            St = alpha * yt + St_prev * (1 - alpha)
             pred.append(St)
             St_prev = St
         smoothed.append(pred)
