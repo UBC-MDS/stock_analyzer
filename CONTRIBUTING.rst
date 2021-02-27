@@ -12,6 +12,11 @@ You can contribute in many ways:
 Types of Contributions
 ----------------------
 
+Workflow
+~~~~~~~~~~~
+
+For this project，our group members agree to use the GitHub Flow strategy for collaboration.
+
 Report Bugs
 ~~~~~~~~~~~
 
