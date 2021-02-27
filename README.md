@@ -2,7 +2,7 @@
 
 ![](https://github.com/UBC-MDS/stock_analyzer/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/UBC-MDS/stock_analyzer/branch/main/graph/badge.svg)](https://codecov.io/gh/UBC-MDS/stock_analyzer) ![Release](https://github.com/UBC-MDS/stock_analyzer/workflows/Release/badge.svg) [![Documentation Status](https://readthedocs.org/projects/stock_analyzer/badge/?version=latest)](https://stock_analyzer.readthedocs.io/en/latest/?badge=latest)
 
-This is a Python package that provides basic time series modeling funcitonalities to analyze historical stock prices. Investment in the stock market requires not only knowledge about the listed companies, but also basic summary statistics and modellings of individual stock prices. Given time-series stock price data, this package provides key summary statistics, applies moving average and exponential smoothing models to the data, and visualizes in-sample moving average fits. A convenient use case for this package is to combine it with the `pandas_datareader` package, which can provide well-formated stock price data from Yahoo!.
+This is a Python package that provides basic time series modeling functionalities to analyze historical stock prices. Investment in the stock market requires not only knowledge about the listed companies, but also basic summary statistics and modellings of individual stock prices. Given time-series stock price data, this package provides key summary statistics, applies moving average and exponential smoothing models to the data, and visualizes in-sample moving average as well as exponential smoothing fits. A convenient use case for this package is to combine it with the `pandas_datareader` package, which can provide well-formated stock price data from Yahoo Finance dataset with customized date range setting.
 
 ## Installation
 
@@ -21,15 +21,18 @@ Users can specify lengths of time spans to calculate summary statistics on, and 
 
 - `movingAverage`
 
-This function applies the moivng average model to all measurements of stock price and returns a pandas dataframe contraining in-sample fitted values. Users can specify the length of moving average windows.
+This function applies the moving average model to all measurements of stock price and returns a pandas dataframe containing in-sample fitted values. Users can specify the length of moving average windows (unit: days).
 
-- `exponential_smoothing_series`
+- `exponentialSmoothing`
 
 This function performs exponential smoothing on historical stock price time series data. Users can specify the `alpha` parameter for smoothing.
 
-- `visualizeMovingAverage`
+- `visMovingAverage`
 
 This function creates a line chart showing the raw historical data and fitted data using the moving average method.
+
+- `visExpSmoothing`
+This function creates a line chart showing the raw historical data and fitted data using the exponential smoothing method.
 
 ## Python Ecosystem
 
@@ -55,7 +58,7 @@ We welcome and recognize all contributions. You can see a list of current contri
 
 - Kangyu (Mark) Wang 
 - Sicheng (Marc) Sun
-- William (Yihang) Xu 
+- William Xu 
 - Tingyu Zhang
 
 ### Credits
