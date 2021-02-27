@@ -137,6 +137,7 @@ dmypy.json
 **.Rproj.user*
 **.Rproj
 **.Rhistory
+.Rproj.user
 
 # Teamwork Contract
 TEAMWORK_CONTRACT.md
