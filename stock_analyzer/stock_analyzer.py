@@ -150,34 +150,6 @@ def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
     return pd.DataFrame(stats)
 
 
-def visualizeMovingAverage(data, name, window, method=movingAverage):
-    """[Visualizing trends of stock by using moving average]
-
-    Args:
-        data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe]
-        name ([str]): [Column names with specific method (moving average) to be used]
-        window ([int]): [Size of the sliding window to compute the moving average]
-        method ([function]): [functions of different method to be used, default: movingAverage]
-
-    Examples:
-        df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-        visualizeMovingAverage(df,'High', 300)
-    """
-
-    df_avgs = method(data, window, [method.__name__ + name for name in data.columns])
-    print(df_avgs)
-
-    plt.plot(data[name], color="blue")
-    plt.plot(df_avgs[method.__name__ + name], color="red")
-    plt.show()
-
-
-# # Get the stock quote
-# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-# # Show the data
-# visualizeMovingAverage(df,'High', 300)
-
-
 # def exponential_smoothing(St_prev, yt, alpha=0.3):
 
 #     """Perform one iteration of single exponentiel smoothing
@@ -262,3 +234,64 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         smoothed.append(pred)
     df_smoothed = pd.DataFrame(np.array(smoothed).T, index=data.index, columns=newColumnNames)
     return df_smoothed
+
+
+def visMovingAverage(data, name, window):
+    """[Visualizing trends of stock by using moving average]
+    Args:
+        data ([pandas.core.frame.DataFrame]): [Input pandas dataframe of stock of interest]
+        name ([str]): [Column to be used in moving average calcuation (such as Close, Adj Close)]
+        window ([int]): [Size of the window (number of days) used in moving average calculation]
+        
+    Returns:
+        [matplotlib.pyplot.plot]: [a graph containing the plot of original movement and the moving average of the stock of interest]
+    Examples:
+        df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+        visualizeMovingAverage(df,'Close', 50)
+    """
+    plt.style.use('fivethirtyeight')
+    
+    df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
+    
+    plt.plot(data[name], color="#0abab5")
+    plt.plot(df_avgs[movingAverage.__name__ + name], color="black")
+    plt.title('Stock Price History with Simple Moving Average', fontsize=20)
+    plt.xlabel('Date', fontsize=18)
+    plt.ylabel('Price', fontsize=18)
+    plt.show()
+
+
+# # Get the stock quote from Yahoo Finance
+# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+# # Plot the simple moving average
+# visMovingAverage(df,'Close', 50)
+
+
+def visExpSmoothing(data, name, alpha):
+    """[Visualizing trends of stock by using exponential smoothing]
+    Args:
+        data ([pandas.core.frame.DataFrame]): [Input pandas dataframe of stock of interest]
+        name ([str]): [Column to be used in exponential smoothing calculation (such as Close, Adj Close)]
+        alpha ([float]): [The smoothing parameter that defines the weighting. It should be between 0 and 1]
+        
+    Returns:
+        plot: [a graph containing the plot of original movement and the exponential smoothing of the stock of interest]
+    Examples:
+        df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+        visExpSmoothing(df,'Close', 50)
+    """
+    plt.style.use('fivethirtyeight')
+    
+    df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
+       
+    plt.plot(data[name], color="blue")
+    plt.plot(df_smoothed[exponentialSmoothing.__name__ + name], color="red")
+    plt.title('Stock Price History with Exponential Smoothing', fontsize=20)
+    plt.xlabel('Date', fontsize=18)
+    plt.ylabel('Price', fontsize=18)
+    plt.show()
+
+# # Get the stock quote from Yahoo Finance
+# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+# # Plot the exponential smoothing average
+# visExpSmoothing(df,'Close', 0.3)
