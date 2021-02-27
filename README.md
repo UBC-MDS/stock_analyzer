@@ -25,15 +25,15 @@ This function applies the moving average model to all measurements of stock pric
 
 - `exponentialSmoothing`
 
-This function performs exponential smoothing on historical stock price time series data. Users can specify the `alpha` parameter for smoothing.
+This function performs exponential smoothing on historical stock price time series data. Users can specify the `alpha` parameter (which defines the weighting, ranging between 0 and 1) for smoothing.
 
 - `visMovingAverage`
 
-This function creates a line chart showing the raw historical data and fitted data using the moving average method.
+This function creates a line chart showing the raw historical data and fitted data using the moving average method. Users are able to specify the dataframe used, the column of choice (such as 'Close', 'Adj Close') for moving average calculation, and the length of moving average window (unit: days).
 
 - `visExpSmoothing`
 
-This function creates a line chart showing the raw historical data and fitted data using the exponential smoothing method.
+This function creates a line chart showing the raw historical data and fitted data using the exponential smoothing method. Users are able to specify the dataframe used, the column of choice (such as 'Close', 'Adj Close') for exponential smoothing calculation, and the `alpha` parameter (which defines the weighting, ranging between 0 and 1) for smoothing.
 
 ## Python Ecosystem
 
