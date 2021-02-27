@@ -40,52 +40,8 @@ def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
         1	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
         2	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
     """
-    # TODO check input format
-    windows_unit = pd.Series(windows).str.slice(start=-1)
-    windows_length = pd.Series(windows).str.slice(stop=-1)
-    stats = {
-        "start_date": [],
-        "end_date": [],
-        "mean": [],
-        "min": [],
-        "max": [],
-        "volatility": [],
-        "return": [],
-    }
-    current_date = data.index.max()
-    for i in range(len(windows)):
-        window_unit = windows_unit[i]
-        window_length = int(windows_length[i])
-
-        if window_unit == "d":
-            start_date = current_date - pd.to_timedelta(window_length, unit="d")
-            start_date = data.index[data.index <= start_date].max()
-        elif window_unit == "m":
-            start_date = current_date - pd.DateOffset(months=window_length)
-            start_date = data.index[data.index <= start_date].max()
-        elif window_unit == "m":
-            start_date = current_date - pd.DateOffset(years=window_length)
-            start_date = data.index[data.index <= start_date].max()
-        else:
-            # TODO raise errors
-            pass
-        if not start_date:
-            warnings.warn(
-                f"Your specified time window {str(window_length) + window_unit} is too long. Return statistics for whole dataset instead"
-            )
-            start_date = data.index.min()
-        data_in = data.loc[
-            (data.index >= start_date) & (data.index <= current_date), measurement
-        ]
-        stats["start_date"].append(start_date)
-        stats["end_date"].append(current_date)
-        stats["mean"].append(data_in.mean())
-        stats["min"].append(data_in.min())
-        stats["max"].append(data_in.max())
-        stats["volatility"].append(data_in.std())
-        stats["return"].append((data_in[-1] - data_in[0]) / data_in[0])
-
-    return pd.DataFrame(stats)
+    pass
+    # TODO 
 
 def movingAverage(data, window, newColumnNames):
     """[Using moving average method to profile stock data]
@@ -132,45 +88,8 @@ def movingAverage(data, window, newColumnNames):
         2020-12-16        3472.797900       3429.746897        3451.544893         3452.264001         4.424345e+09             3452.264001
         2020-12-17        3477.611902       3434.693899        3456.338691         3457.304402         4.425915e+09             3457.304402
     """
-
-    avgs = []
-    for name in data.columns:
-        values = data[name].values
-
-        values = np.insert(values, 0, [values[0] for i in range(window - 1)])
-        avg = [
-            np.average(values[i - window + 1 : i + 1])
-            for i in range(window - 1, len(values))
-        ]
-        avgs.append(avg)
-
-    df_avgs = pd.DataFrame(np.array(avgs).T, index=data.index, columns=newColumnNames)
-    return df_avgs
-
-
-# def exponential_smoothing(St_prev, yt, alpha=0.3):
-
-#     """Perform one iteration of single exponentiel smoothing
-
-#     Parameters
-#     ----------
-#     St_prev : float
-#         previous state, prediction calculated from last iteration
-
-#     yt : float
-#         the new observation
-
-#     alpha : float
-#         hyperparameter
-
-#     Returns
-#     -------
-#     St: float
-#         updated state(prediction)
-#     """
-
-#     St = alpha * yt + St_prev * (1 - alpha)
-#     return St
+    pass
+    # TODO
 
 
 def exponentialSmoothing(data, newColumnNames, alpha=0.3):
@@ -219,19 +138,8 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
     
     """
-    smoothed = []
-    for name in data.columns:
-        pred = []
-        values = data[name].values
-        St_prev = values[0]
-        for i in range(len(values)):
-            yt = values[i]
-            St = alpha * yt + St_prev * (1 - alpha)
-            pred.append(St)
-            St_prev = St
-        smoothed.append(pred)
-    df_smoothed = pd.DataFrame(np.array(smoothed).T, index=data.index, columns=newColumnNames)
-    return df_smoothed
+    pass
+    # TODO
 
 
 def visMovingAverage(data, name, window):
@@ -247,23 +155,8 @@ def visMovingAverage(data, name, window):
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visualizeMovingAverage(df,'Close', 50)
     """
-    plt.style.use('fivethirtyeight')
-    
-    df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
-    
-    plt.plot(data[name], color="#0abab5")
-    plt.plot(df_avgs[movingAverage.__name__ + name], color="black")
-    plt.title('Stock Price History with Simple Moving Average', fontsize=20)
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Price', fontsize=18)
-    plt.show()
-
-
-# # Get the stock quote from Yahoo Finance
-# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-# # Plot the simple moving average
-# visMovingAverage(df,'Close', 50)
-
+    pass
+    # TODO
 
 def visExpSmoothing(data, name, alpha):
     """[Visualizing trends of stock by using exponential smoothing]
@@ -273,23 +166,10 @@ def visExpSmoothing(data, name, alpha):
         alpha ([float]): [The smoothing parameter that defines the weighting. It should be between 0 and 1]
         
     Returns:
-        plot: [a graph containing the plot of original movement and the exponential smoothing of the stock of interest]
+        [matplotlib.pyplot.plot]: [a graph containing the plot of original movement and the exponential smoothing of the stock of interest]
     Examples:
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visExpSmoothing(df,'Close', 50)
     """
-    plt.style.use('fivethirtyeight')
-    
-    df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
-       
-    plt.plot(data[name], color="blue")
-    plt.plot(df_smoothed[exponentialSmoothing.__name__ + name], color="red")
-    plt.title('Stock Price History with Exponential Smoothing', fontsize=20)
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Price', fontsize=18)
-    plt.show()
-
-# # Get the stock quote from Yahoo Finance
-# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-# # Plot the exponential smoothing average
-# visExpSmoothing(df,'Close', 0.3)
+    pass
+    # TODO
