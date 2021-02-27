@@ -32,6 +32,7 @@ This function performs exponential smoothing on historical stock price time seri
 This function creates a line chart showing the raw historical data and fitted data using the moving average method.
 
 - `visExpSmoothing`
+
 This function creates a line chart showing the raw historical data and fitted data using the exponential smoothing method.
 
 ## Python Ecosystem
