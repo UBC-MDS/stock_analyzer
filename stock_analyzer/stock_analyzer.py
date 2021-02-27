@@ -203,30 +203,62 @@ def exponential_smoothing(St_prev, yt, alpha=0.3):
     return St
 
 
-def exponential_smoothing_series(Serie, alpha=0.3):
+def exponentialSmoothing(data, newColumnNames, alpha=0.3):
 
-    """Perform single exponential smoothing prediction for univariate time serie
+    """[Using exponential smoothing method to profile stock data]
 
-    Parameters
-    ----------
-    Serie : list, numpy array，pandas serie'
-        a list of numbers in chronological order
+    Args:
+        data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe]
+        alpha ([float]): [The smoothing parameter that defines the weighting. It should be between 0 and 1]
+        newColumnNames ([str]): [new column names after creating moving average dataframe]
+    Returns:
+        [pandas.core.frame.DataFrame]: [A Pandas dataframe contains exponential smoothing fits of the data]
 
-    alpha : float between 0 and 1
-        hyperparameter
+    Examples:
+        >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+        >>> df
+                        High          Low         Open        Close      Volume    Adj Close
+        Date
+        2012-01-03  1284.619995  1258.859985  1258.859985  1277.060059  3943710000  1277.060059
+        2012-01-04  1278.729980  1268.099976  1277.030029  1277.300049  3592580000  1277.300049
+        2012-01-05  1283.050049  1265.260010  1277.300049  1281.060059  4315950000  1281.060059
+        2012-01-06  1281.839966  1273.339966  1280.930054  1277.810059  3656830000  1277.810059
+        2012-01-09  1281.989990  1274.550049  1277.829956  1280.699951  3371600000  1280.699951
+        ...                 ...          ...          ...          ...         ...          ...
+        2020-12-11  3665.909912  3633.399902  3656.080078  3663.459961  4367150000  3663.459961
+        2020-12-14  3697.610107  3645.840088  3675.270020  3647.489990  4594920000  3647.489990
+        2020-12-15  3695.290039  3659.620117  3666.409912  3694.620117  4360280000  3694.620117
+        2020-12-16  3711.270020  3688.570068  3696.250000  3701.169922  4056950000  3701.169922
+        2020-12-17  3725.120117  3710.870117  3713.649902  3722.479980  4184930000  3722.479980
 
-    Returns
-    -------
-    pred: numpy array
-        prediction calculated using single exponential smoothing method
+        >>> df_exponentialSmoothing = exponentialSmoothing(df,['exponentialSmoothing'+ name for name in df.columns])
+        >>> df_exponentialSmoothing
+
+	    exponentialSmoothingHigh	exponentialSmoothingLow	exponentialSmoothingOpen	exponentialSmoothingClose	exponentialSmoothingVolume	exponentialSmoothingAdj Close
+        Date						
+        2012-01-03	1284.619995	1258.859985	1258.859985	1277.060059	3.943710e+09	1277.060059
+        2012-01-04	1282.852991	1261.631982	1264.310999	1277.132056	3.838371e+09	1277.132056
+        2012-01-05	1282.912108	1262.720391	1268.207714	1278.310457	3.981645e+09	1278.310457
+        2012-01-06	1282.590465	1265.906263	1272.024416	1278.160337	3.884200e+09	1278.160337
+        2012-01-09	1282.410323	1268.499399	1273.766078	1278.922221	3.730420e+09	1278.922221
+        ...	...	...	...	...	...	...
+        2020-12-11	3683.080578	3649.520587	3668.977441	3671.981068	4.714086e+09	3671.981068
+        2020-12-14	3687.439437	3648.416438	3670.865215	3664.633745	4.678337e+09	3664.633745
+        2020-12-15	3689.794617	3651.777541	3669.528624	3673.629656	4.582920e+09	3673.629656
+        2020-12-16	3696.237238	3662.815300	3677.545037	3681.891736	4.425129e+09	3681.891736
+        2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
+    
     """
-
-    pred = []
-    St_prev = Serie[0]
-    for i in range(len(Serie)):
-
-        yt = Serie[i]
-        St = exponential_smoothing(St_prev=St_prev, yt=yt, alpha=alpha)
-        pred.append(St)
-        St_prev = St
-    return pred
+    smoothed = []
+    for name in data.columns:
+        pred = []
+        values = data[name].values
+        St_prev = values[0]
+        for i in range(len(values)):
+            yt = values[i]
+            St = exponential_smoothing(St_prev=St_prev, yt=yt, alpha=alpha)
+            pred.append(St)
+            St_prev = St
+        smoothed.append(pred)
+    df_smoothed = pd.DataFrame(np.array(smoothed).T, index=data.index, columns=newColumnNames)
+    return df_smoothed
