@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
-
-from statsmodels.tsa.arima.model import ARIMA
+import warnings
 
 
 def movingAverage(data, window, newColumnNames):
@@ -68,18 +67,16 @@ def movingAverage(data, window, newColumnNames):
     return df_avgs
 
 
-def ARIMA(
-    data,
-):
-    """[Using moving average method to profile stock data]
+def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
+    """[Using Autoregressive Integrated Moving Average (ARIMA) method to profile stock data]
 
     Args:
-        data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe]
-        window ([int]): [Size of the sliding window to compute the moving average]
-        newColumnNames ([str]): [new column names after creating moving average dataframe]
+        data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe. It should have a DatetimeIndex]
+        windows ([list(str)]): [a list of strings indicating the length of time windows to calculate summary statistics. Each element should be a numeric value followed by one of ["d", "m", "y"]. If the length of a specified time window exceeds the whole dataset, the whole dataset will be used instead.]
+        measurement ([str]): [One of ["High", "Low", "Open", "Close", "Volume", "Adj Close"]. The calculation of statistics will be based on the specified measurement.]
 
     Returns:
-        [pandas.core.frame.DataFrame]: [A Pandas dataframe contains moving average from the data]
+        [pandas.core.frame.DataFrame]: [A Pandas dataframe that contains summary statistics for specified lengths, up till the current time (latest time in input data). Statistics calculated include mean price, minimum price, maximum price, volatility and return]
 
     Examples:
         >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
@@ -115,6 +112,52 @@ def ARIMA(
         2020-12-16        3472.797900       3429.746897        3451.544893         3452.264001         4.424345e+09             3452.264001
         2020-12-17        3477.611902       3434.693899        3456.338691         3457.304402         4.425915e+09             3457.304402
     """
+    # TODO check input format
+    windows_unit = pd.Series(windows).str.slice(start=-1)
+    windows_length = pd.Series(windows).str.slice(stop=-1)
+    stats = {
+        "start_date": [],
+        "end_date": [],
+        "mean": [],
+        "min": [],
+        "max": [],
+        "volatility": [],
+        "return": [],
+    }
+    current_date = data.index.max()
+    for i in range(len(windows)):
+        window_unit = windows_unit[i]
+        window_length = int(windows_length[i])
+
+        if window_unit == "d":
+            start_date = current_date - pd.to_timedelta(window_length, unit="d")
+            start_date = data.index[data.index <= start_date].max()
+        elif window_unit == "m":
+            start_date = current_date - pd.DateOffset(months=window_length)
+            start_date = data.index[data.index <= start_date].max()
+        elif window_unit == "m":
+            start_date = current_date - pd.DateOffset(years=window_length)
+            start_date = data.index[data.index <= start_date].max()
+        else:
+            # TODO raise errors
+            pass
+        if not start_date:
+            warnings.warn(
+                f"Your specified time window {str(window_length) + window_unit} is too long. Return statistics for whole dataset instead"
+            )
+            start_date = data.index.min()
+        data_in = data.loc[
+            (data.index >= start_date) & (data.index <= current_date), measurement
+        ]
+        stats["start_date"].append(start_date)
+        stats["end_date"].append(current_date)
+        stats["mean"].append(data_in.mean())
+        stats["min"].append(data_in.min())
+        stats["max"].append(data_in.max())
+        stats["volatility"].append(data_in.std())
+        stats["return"].append((data_in[-1] - data_in[0]) / data_in[0])
+
+    return pd.DataFrame(stats)
 
 
 def visualizeMovingAverage(data, name, window, method=movingAverage):
@@ -145,15 +188,15 @@ def visualizeMovingAverage(data, name, window, method=movingAverage):
 # visualizeMovingAverage(df,'High', 300)
 
 
-def exponential_smoothing(St_prev,yt, alpha=0.3):
+def exponential_smoothing(St_prev, yt, alpha=0.3):
 
-  """Perform one iteration of single exponentiel smoothing
+    """Perform one iteration of single exponentiel smoothing
 
     Parameters
     ----------
-    St_prev : float 
+    St_prev : float
         previous state, prediction calculated from last iteration
-        
+
     yt : float
         the new observation
 
@@ -164,23 +207,21 @@ def exponential_smoothing(St_prev,yt, alpha=0.3):
     -------
     St: float
         updated state(prediction)
-  """
+    """
 
-
-  St= alpha*yt+St_prev*(1-alpha)
-  return St
-
+    St = alpha * yt + St_prev * (1 - alpha)
+    return St
 
 
 def exponential_smoothing_series(Serie, alpha=0.3):
 
-  """Perform single exponential smoothing prediction for univariate time serie
+    """Perform single exponential smoothing prediction for univariate time serie
 
     Parameters
     ----------
     Serie : list, numpy array，pandas serie'
         a list of numbers in chronological order
-        
+
     alpha : float between 0 and 1
         hyperparameter
 
@@ -188,14 +229,14 @@ def exponential_smoothing_series(Serie, alpha=0.3):
     -------
     pred: numpy array
         prediction calculated using single exponential smoothing method
-  """
+    """
 
-  pred=[]
-  St_prev=Serie[0]
-  for i in range(len(Serie)):
+    pred = []
+    St_prev = Serie[0]
+    for i in range(len(Serie)):
 
-    yt=Serie[i]
-    St= exponential_smoothing(St_prev=St_prev, yt=yt,alpha=alpha)
-    pred.append(St)
-    St_prev=St
-  return pred
+        yt = Serie[i]
+        St = exponential_smoothing(St_prev=St_prev, yt=yt, alpha=alpha)
+        pred.append(St)
+        St_prev = St
+    return pred
