@@ -199,8 +199,19 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
     
     """
-    pass
-    # TODO
+    smoothed = []
+    for name in data.columns:
+        pred = []
+        values = data[name].values
+        St_prev = values[0]
+        for i in range(len(values)):
+            yt = values[i]
+            St = alpha * yt + St_prev * (1 - alpha)
+            pred.append(St)
+            St_prev = St
+        smoothed.append(pred)
+    df_smoothed = pd.DataFrame(np.array(smoothed).T, index=data.index, columns=newColumnNames)
+    return df_smoothed
 
 
 def visMovingAverage(data, name, window):
