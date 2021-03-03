@@ -40,8 +40,56 @@ def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
         1	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
         2	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
     """
-    pass
-    # TODO 
+    if type(df) != pd.core.frame.DataFrame:
+        raise TypeError("Input should be a pandas dataframe")
+    elif type(df.index) != pd.core.indexes.datetimes.DatetimeIndex:
+        raise TypeError("Index of input dataframe should be of Datetime format")
+
+    windows_unit = pd.Series(windows).str.slice(start=-1)
+    windows_length = pd.Series(windows).str.slice(stop=-1)
+    stats = {
+        "start_date": [],
+        "end_date": [],
+        "mean": [],
+        "min": [],
+        "max": [],
+        "volatility": [],
+        "return": [],
+    }
+    current_date = data.index.max()
+    for i in range(len(windows)):
+        window_unit = windows_unit[i]
+        window_length = int(windows_length[i])
+
+        if window_unit == "d":
+            start_date = current_date - pd.to_timedelta(window_length, unit="d")
+            start_date = data.index[data.index <= start_date].max()
+        elif window_unit == "m":
+            start_date = current_date - pd.DateOffset(months=window_length)
+            start_date = data.index[data.index <= start_date].max()
+        elif window_unit == "m":
+            start_date = current_date - pd.DateOffset(years=window_length)
+            start_date = data.index[data.index <= start_date].max()
+        else:
+            # TODO raise errors
+            pass
+        if not start_date:
+            warnings.warn(
+                f"Your specified time window {str(window_length) + window_unit} is too long. Return statistics for whole dataset instead"
+            )
+            start_date = data.index.min()
+        data_in = data.loc[
+            (data.index >= start_date) & (data.index <= current_date), measurement
+        ]
+        stats["start_date"].append(start_date)
+        stats["end_date"].append(current_date)
+        stats["mean"].append(data_in.mean())
+        stats["min"].append(data_in.min())
+        stats["max"].append(data_in.max())
+        stats["volatility"].append(data_in.std())
+        stats["return"].append((data_in[-1] - data_in[0]) / data_in[0])
+
+    return pd.DataFrame(stats)
 
 def movingAverage(data, window, newColumnNames):
     """[Using moving average method to profile stock data]
