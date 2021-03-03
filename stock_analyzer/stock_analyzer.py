@@ -5,16 +5,15 @@ from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
 import warnings
 
-def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
+def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
     """[Using Autoregressive Integrated Moving Average (ARIMA) method to profile stock data]
 
     Args:
-        data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe. It should have a DatetimeIndex]
-        windows ([list(str)]): [a list of strings indicating the lengths of time windows to calculate summary statistics. Each element should be a numeric value followed by one of ["d", "m", "y"]. If the length of a specified time window exceeds the timespan of the whole dataset, the whole dataset will be used instead.]
-        measurement ([str]): [One of ["High", "Low", "Open", "Close", "Volume", "Adj Close"]. The calculation of statistics will be based on the specified measurement of stock price.]
+        data ([ndarray (structured or homogeneous), Iterable, dict, or DataFrame]): [Input data. It should be convertable to a pandas dataframe.]
+        measurements ([str]): [All elements should be column names of data. The calculation of statistics will be based on the specified measurement of stock price.]
 
     Returns:
-        [pandas.core.frame.DataFrame]: [A Pandas dataframe that contains summary statistics for specified lengths, up till the current time (latest time in input data). Statistics calculated include mean price, minimum price, maximum price, volatility and return]
+        [pandas.core.frame.DataFrame]: [A Pandas dataframe that contains summary statistics for the specified columns of the data. Statistics calculated include mean price, minimum price, maximum price, volatility and return]
 
     Examples:
         >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
@@ -33,63 +32,39 @@ def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
         2020-12-16  3711.270020  3688.570068  3696.250000  3701.169922  4056950000  3701.169922
         2020-12-17  3725.120117  3710.870117  3713.649902  3722.479980  4184930000  3722.479980
 
-        >>> df_summarystats = summaryStats(data = df, measurement="Open")
+        >>> df_summarystats = summaryStats(data = df, measurements=["Open", "Volume"])
         >>> df_summarystats
       	    start_date	end_date	mean	min	max	volatility	return
         0	2020-12-07	2020-12-17	3683.394423	3656.080078	3713.649902	20.641892	0.005121
         1	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
         2	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624
     """
-    if type(df) != pd.core.frame.DataFrame:
-        raise TypeError("Input should be a pandas dataframe")
-    elif type(df.index) != pd.core.indexes.datetimes.DatetimeIndex:
-        raise TypeError("Index of input dataframe should be of Datetime format")
+    try:
+        data = pd.DataFrame(data)
+    except ValueError:
+        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+    else:
+        stats = {
+            "measurement": [],
+            "mean": [],
+            "min": [],
+            "max": [],
+            "volatility": [],
+            "return": [],
+        }
+        for measurement in measurements:
+            if measurement not in list(data.columns):
+                raise ValueError(f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
+            else:
+                data_measurement = data[measurement]
+                stats["measurement"].append(measurement)
+                stats["mean"].append(data_measurement.mean())
+                stats["min"].append(data_measurement.min())
+                stats["max"].append(data_measurement.max())
+                stats["volatility"].append(data_measurement.std())
+                stats["return"].append((data_measurement[-1] - data_measurement[0]) / data_measurement[0])
 
-    windows_unit = pd.Series(windows).str.slice(start=-1)
-    windows_length = pd.Series(windows).str.slice(stop=-1)
-    stats = {
-        "start_date": [],
-        "end_date": [],
-        "mean": [],
-        "min": [],
-        "max": [],
-        "volatility": [],
-        "return": [],
-    }
-    current_date = data.index.max()
-    for i in range(len(windows)):
-        window_unit = windows_unit[i]
-        window_length = int(windows_length[i])
-
-        if window_unit == "d":
-            start_date = current_date - pd.to_timedelta(window_length, unit="d")
-            start_date = data.index[data.index <= start_date].max()
-        elif window_unit == "m":
-            start_date = current_date - pd.DateOffset(months=window_length)
-            start_date = data.index[data.index <= start_date].max()
-        elif window_unit == "m":
-            start_date = current_date - pd.DateOffset(years=window_length)
-            start_date = data.index[data.index <= start_date].max()
-        else:
-            # TODO raise errors
-            pass
-        if not start_date:
-            warnings.warn(
-                f"Your specified time window {str(window_length) + window_unit} is too long. Return statistics for whole dataset instead"
-            )
-            start_date = data.index.min()
-        data_in = data.loc[
-            (data.index >= start_date) & (data.index <= current_date), measurement
-        ]
-        stats["start_date"].append(start_date)
-        stats["end_date"].append(current_date)
-        stats["mean"].append(data_in.mean())
-        stats["min"].append(data_in.min())
-        stats["max"].append(data_in.max())
-        stats["volatility"].append(data_in.std())
-        stats["return"].append((data_in[-1] - data_in[0]) / data_in[0])
-
-    return pd.DataFrame(stats)
+        return pd.DataFrame(stats)
 
 def movingAverage(data, window, newColumnNames):
     """[Using moving average method to profile stock data]
