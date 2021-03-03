@@ -2,7 +2,6 @@ import pandas_datareader as web
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-import matplotlib.gridspec as gridspec
 import warnings
 
 def summaryStats(data, windows=["10d", "1m", "1y"], measurement="Close"):
