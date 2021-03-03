@@ -216,8 +216,23 @@ def visMovingAverage(data, name, window):
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visualizeMovingAverage(df,'Close', 50)
     """
-    pass
-    # TODO
+
+    plt.style.use('fivethirtyeight')
+    
+    df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
+    
+    plt.plot(data[name], color="#0abab5")
+    plt.plot(df_avgs[movingAverage.__name__ + name], color="black")
+    plt.title('Stock Price History with Simple Moving Average', fontsize=20)
+    plt.xlabel('Date', fontsize=18)
+    plt.ylabel('Price', fontsize=18)
+    plt.show()
+
+
+# # Get the stock quote from Yahoo Finance
+# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+# # Plot the simple moving average
+# visMovingAverage(df,'Close', 50)
 
 def visExpSmoothing(data, name, alpha):
     """[Visualizing trends of stock by using exponential smoothing]
@@ -232,5 +247,19 @@ def visExpSmoothing(data, name, alpha):
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visExpSmoothing(df,'Close', 50)
     """
-    pass
-    # TODO
+    
+    plt.style.use('fivethirtyeight')
+    
+    df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
+       
+    plt.plot(data[name], color="blue")
+    plt.plot(df_smoothed[exponentialSmoothing.__name__ + name], color="red")
+    plt.title('Stock Price History with Exponential Smoothing', fontsize=20)
+    plt.xlabel('Date', fontsize=18)
+    plt.ylabel('Price', fontsize=18)
+    plt.show()
+
+# Get the stock quote from Yahoo Finance
+# df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
+# Plot the exponential smoothing average
+# visExpSmoothing(df,'Close', 0.3)
