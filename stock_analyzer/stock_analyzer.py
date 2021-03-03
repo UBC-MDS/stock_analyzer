@@ -88,8 +88,21 @@ def movingAverage(data, window, newColumnNames):
         2020-12-16        3472.797900       3429.746897        3451.544893         3452.264001         4.424345e+09             3452.264001
         2020-12-17        3477.611902       3434.693899        3456.338691         3457.304402         4.425915e+09             3457.304402
     """
-    pass
-    # TODO
+
+    avgs = []
+    
+    for name in data.columns:
+        values = data[name].values
+
+        values = np.insert(values, 0, [values[0] for i in range(window - 1)])
+        avg = [
+            np.average(values[i - window + 1 : i + 1])
+            for i in range(window - 1, len(values))
+        ]
+        avgs.append(avg)
+
+    df_avgs = pd.DataFrame(np.array(avgs).T, index=data.index, columns=newColumnNames)
+    return df_avgs
 
 
 def exponentialSmoothing(data, newColumnNames, alpha=0.3):
