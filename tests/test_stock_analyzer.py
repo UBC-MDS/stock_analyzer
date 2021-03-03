@@ -35,7 +35,7 @@ def test_SummaryStats():
     assert list(df_movingAverage["movingAverage1"].values) == [1, 1, 1, 1, 1, 1, 1, 1]
 
 
-def testMovingAverage():
+def test_movingAverage():
     source = pd.DataFrame(
         data=[
             [1, 2, 3, 4, 5],
@@ -59,4 +59,4 @@ def testMovingAverage():
     assert list(df_movingAverage["movingAverage1"].values) == [1, 1, 1, 1, 1, 1, 1, 1]
 
 
-testMovingAverage()
+test_movingAverage()

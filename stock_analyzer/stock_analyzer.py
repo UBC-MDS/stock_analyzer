@@ -2,7 +2,6 @@ import pandas_datareader as web
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-import matplotlib.gridspec as gridspec
 import warnings
 
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
@@ -174,8 +173,19 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
     
     """
-    pass
-    # TODO
+    smoothed = []
+    for name in data.columns:
+        pred = []
+        values = data[name].values
+        St_prev = values[0]
+        for i in range(len(values)):
+            yt = values[i]
+            St = alpha * yt + St_prev * (1 - alpha)
+            pred.append(St)
+            St_prev = St
+        smoothed.append(pred)
+    df_smoothed = pd.DataFrame(np.array(smoothed).T, index=data.index, columns=newColumnNames)
+    return df_smoothed
 
 
 def visMovingAverage(data, name, window):
@@ -186,28 +196,35 @@ def visMovingAverage(data, name, window):
         window ([int]): [Size of the window (number of days) used in moving average calculation]
         
     Returns:
-        [matplotlib.pyplot.plot]: [a graph containing the plot of original movement and the moving average of the stock of interest]
+        [matplotlib.figure.Figure]: [a figure object containing the plot of original movement and the moving average of the stock of interest]
     Examples:
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visualizeMovingAverage(df,'Close', 50)
+        fig.savefig("visMovingAverage.png")
     """
 
     plt.style.use('fivethirtyeight')
     
     df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
     
-    plt.plot(data[name], color="#0abab5")
-    plt.plot(df_avgs[movingAverage.__name__ + name], color="black")
-    plt.title('Stock Price History with Simple Moving Average', fontsize=20)
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Price', fontsize=18)
-    plt.show()
+    fig, ax = plt.subplots(figsize=(16, 8))
+
+    ax.plot(data[name], color="#0abab5")
+    ax.plot(df_avgs[movingAverage.__name__ + name], color="black")
+    ax.set_title('Stock Price History with Simple Moving Average', fontsize=20)
+    ax.set_xlabel('Date', fontsize=18)
+    ax.set_ylabel('Price', fontsize=18)
+    fig.tight_layout()
+    print(type(fig))
+    return fig
 
 
 # # Get the stock quote from Yahoo Finance
 # df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
 # # Plot the simple moving average
-# visMovingAverage(df,'Close', 50)
+# fig = visMovingAverage(df,'Close', 50)
+# fig.savefig("visMovingAverage.png")
+
 
 def visExpSmoothing(data, name, alpha):
     """[Visualizing trends of stock by using exponential smoothing]
@@ -217,24 +234,28 @@ def visExpSmoothing(data, name, alpha):
         alpha ([float]): [The smoothing parameter that defines the weighting. It should be between 0 and 1]
         
     Returns:
-        [matplotlib.pyplot.plot]: [a graph containing the plot of original movement and the exponential smoothing of the stock of interest]
+        [matplotlib.figure.Figure]: [a figure object containing the plot of original movement and the exponential smoothing of the stock of interest]
     Examples:
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-        visExpSmoothing(df,'Close', 50)
+        fig = visExpSmoothing(df,'Close', 0.3)
+        fig.savefig("visExpSmoothing.png")
     """
     
     plt.style.use('fivethirtyeight')
     
     df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
-       
-    plt.plot(data[name], color="blue")
-    plt.plot(df_smoothed[exponentialSmoothing.__name__ + name], color="red")
-    plt.title('Stock Price History with Exponential Smoothing', fontsize=20)
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Price', fontsize=18)
-    plt.show()
 
-# Get the stock quote from Yahoo Finance
+    fig, ax = plt.subplots(figsize=(16, 8))
+    ax.plot(data[name], color="blue")
+    ax.plot(df_smoothed[exponentialSmoothing.__name__ + name], color="red")
+    ax.set_title('Stock Price History with Exponential Smoothing', fontsize=20)
+    ax.set_xlabel('Date', fontsize=18)
+    ax.set_ylabel('Price', fontsize=18)
+    fig.tight_layout()
+    return fig
+
+# # Get the stock quote from Yahoo Finance
 # df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-# Plot the exponential smoothing average
-# visExpSmoothing(df,'Close', 0.3)
+# # Save the exponential smoothing average as png
+# fig = visExpSmoothing(df,'Close', 0.3)
+# fig.savefig("visExpSmoothing.png")
