@@ -61,7 +61,7 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
                 stats["min"].append(data_measurement.min())
                 stats["max"].append(data_measurement.max())
                 stats["volatility"].append(data_measurement.std())
-                stats["return"].append((data_measurement[-1] - data_measurement[0]) / data_measurement[0])
+                stats["return"].append((list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
 
         return pd.DataFrame(stats)
 
