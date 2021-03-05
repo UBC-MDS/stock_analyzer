@@ -56,13 +56,17 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
                 raise ValueError(f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
             else:
                 data_measurement = data[measurement]
-                stats["measurement"].append(measurement)
-                stats["mean"].append(data_measurement.mean())
-                stats["min"].append(data_measurement.min())
-                stats["max"].append(data_measurement.max())
-                stats["volatility"].append(data_measurement.std())
-                stats["return"].append((list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
-
+                try:
+                    data_measurement = pd.to_numeric(data_measurement)
+                except ValueError:
+                    raise ValueError(f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
+                else:
+                    stats["measurement"].append(measurement)
+                    stats["mean"].append(data_measurement.mean())
+                    stats["min"].append(data_measurement.min())
+                    stats["max"].append(data_measurement.max())
+                    stats["volatility"].append(data_measurement.std())
+                    stats["return"].append((list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
         return pd.DataFrame(stats)
 
 def movingAverage(data, window, newColumnNames):

@@ -40,6 +40,26 @@ def test_SummaryStats():
         == "Your specified measurement 'High' is not a column name of the data. Please double check the column names in data."
     )
 
+    # Non-numeric data
+    data_3 = pd.DataFrame(
+        data=[
+            [1, 2, 3, 4, 5],
+            ["p", 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+        ],
+        columns=["e", "2", "3", "4", "5"],
+    )
+    with raises(ValueError) as execinfo_3:
+        stock_analyzer.summaryStats(data_3, measurements=["e", "2", "3"])
+    assert (
+        str(execinfo_3.value)
+        == "Data in column 'e' of your input data cannot be converted to numeric format."
+    )
     # Test output
     data_3 = pd.DataFrame(
         data=[
