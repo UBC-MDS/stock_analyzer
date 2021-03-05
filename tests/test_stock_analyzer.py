@@ -217,21 +217,33 @@ def test_exponentialSmoothing():
 def test_visExpSmoothing():
     source = pd.DataFrame(
         data=[
-            ["1", 2, 3, 4, 5],
-            [1, "2.222222", 3, 4, 5],
             [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5],
+            [1, 12, 3, 4, 5],
+            [1, 22, 3, 4, 5],
+            [1, 32, 3, 4, 5],
+            [1, 42, 3, 4, 5],
+            [1, 52, 3, 4, 5],
+            [1, 62, 3, 4, 5],
+            [1, 72, 3, 4, 5],
         ],
         columns=["1", "2", "3", "4", "5"],
     )
+    exp_plot = stock_analyzer.visExpSmoothing(source, "2", 0.5)
 
+    print(exp_plot.layer[0].encoding.x)
+    assert (
+        exp_plot.layer[0].encoding.x.shorthand == "index"
+    ), "index should be mapped to the x axis"
+    assert (
+        exp_plot.layer[1].encoding.x.shorthand == "index"
+    ), "index should be mapped to the x axis"
 
-test_SummaryStats()
-test_movingAverage()
-test_exponentialSmoothing
-test_movingAverage
-test_exponentialSmoothing
+    assert (
+        exp_plot.layer[0].encoding.y.shorthand == "2"
+    ), "colum '2' should be mapped to the y axis"
+    assert (
+        exp_plot.layer[1].encoding.y.shorthand == "exponentialSmoothing2"
+    ), "colum 'exponentialSmoothing2' should be mapped to the y axis"
+
+    assert exp_plot.layer[0].mark == "line", "mark should be a line"
+    assert exp_plot.layer[1].mark == "line", "mark should be a line"
