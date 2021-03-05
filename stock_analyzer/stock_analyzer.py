@@ -220,12 +220,12 @@ def visMovingAverage(data, name, window):
     """
     df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
     
-    if df.index.name is None:
+    if data.index.name is None:
         index_name = 'index'
     else:
-        index_name = df.index.name
+        index_name = data.index.name
 
-    plot_a = alt.Chart(df.reset_index(), title = 'Stock Price History with Simple Moving Average').mark_line().encode(
+    plot_a = alt.Chart(data.reset_index(), title = 'Stock Price History with Simple Moving Average').mark_line().encode(
         x=index_name,
         y=alt.Y(name, title='Price'),
         color=alt.value("#0abab5")
@@ -244,6 +244,25 @@ def visMovingAverage(data, name, window):
 ## Visualize Moving Average
 # visMovingAverage(df, 'Close', 50)
 
+source = pd.DataFrame(
+    data=[
+        ['1', 2, 3, 4, 5],
+        [1, '2.222222', 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+    ],
+    columns=["1", "2", "3", "4", "5"],
+)
+df_movingAverage = movingAverage(
+    source, 3, ["movingAverage" + name for name in source.columns]
+)
+visMovingAverage(source, '3', 3)
+
+
 
 def visExpSmoothing(data, name, alpha):
     """[Visualizing trends of stock by using exponential smoothing]
@@ -260,10 +279,10 @@ def visExpSmoothing(data, name, alpha):
     """
     df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
     
-    if df.index.name is None:
+    if data.index.name is None:
         index_name = 'index'
     else:
-        index_name = df.index.name
+        index_name = data.index.name
 
     plot_c = alt.Chart(df.reset_index(), title = 'Stock Price History with Exponential Smoothing').mark_line().encode(
         x=index_name,
