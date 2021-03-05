@@ -1,7 +1,7 @@
 import pandas_datareader as web
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
+import altair as alt
 import warnings
 
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):

@@ -3,6 +3,7 @@ from stock_analyzer import stock_analyzer
 from pytest import raises
 import pandas as pd
 import numpy as np
+import altair as alt
 
 
 def test_version():
@@ -219,6 +220,12 @@ def test_exponentialSmoothing():
 
 
 
+
+
+
+
 test_SummaryStats()
 test_movingAverage()
+test_exponentialSmoothing
+test_movingAverage
 test_exponentialSmoothing
