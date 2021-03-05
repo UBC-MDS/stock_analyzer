@@ -218,6 +218,9 @@ def visMovingAverage(data, name, window):
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visualizeMovingAverage(df,'Close', 50)
     """
+    if name not in data.columns:
+        raise ValueError("Your input name does not match with the dataframe column name! Please enter valid column name!")
+
     df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
     
     if data.index.name is None:
@@ -244,25 +247,6 @@ def visMovingAverage(data, name, window):
 ## Visualize Moving Average
 # visMovingAverage(df, 'Close', 50)
 
-source = pd.DataFrame(
-    data=[
-        ['1', 2, 3, 4, 5],
-        [1, '2.222222', 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-    ],
-    columns=["1", "2", "3", "4", "5"],
-)
-df_movingAverage = movingAverage(
-    source, 3, ["movingAverage" + name for name in source.columns]
-)
-visMovingAverage(source, '3', 3)
-
-
 
 def visExpSmoothing(data, name, alpha):
     """[Visualizing trends of stock by using exponential smoothing]
@@ -277,6 +261,9 @@ def visExpSmoothing(data, name, alpha):
         df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
         visExpSmoothing(df,'Close', 0.3)
     """
+    if name not in data.columns:
+        raise ValueError("Your input name does not match with the dataframe column name! Please enter valid column name!")
+
     df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
     
     if data.index.name is None:
