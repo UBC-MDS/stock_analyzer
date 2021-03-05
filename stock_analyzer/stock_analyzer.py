@@ -114,12 +114,25 @@ def movingAverage(data, window, newColumnNames):
         2020-12-16        3472.797900       3429.746897        3451.544893         3452.264001         4.424345e+09             3452.264001
         2020-12-17        3477.611902       3434.693899        3456.338691         3457.304402         4.425915e+09             3457.304402
     """
+    try:
+        data = pd.DataFrame(data)
+    except ValueError:
+        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
 
     avgs = []
     
     for name in data.columns:
-        values = data[name].values
-
+        try:
+            values = data[name].values.astype('float')
+        except TypeError:
+            raise TypeError("Type of Column %s isn't a string or a number " % name)
+        except ValueError:
+            raise ValueError("Column %s can't be converted to floating point" % name)
+        
+        _nan_locations = np.argwhere(np.isnan(values))
+        if _nan_locations.shape[0] > 0:
+            raise ValueError(("Column {} has Nan at "+"{} "*_nan_locations.shape[0]).format(name,*_nan_locations))
+        
         values = np.insert(values, 0, [values[0] for i in range(window - 1)])
         avg = [
             np.average(values[i - window + 1 : i + 1])
