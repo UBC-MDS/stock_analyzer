@@ -180,8 +180,6 @@ def test_movingAverage():
         == "Column e can't be converted to floating point"
     )
 
-
-
 def test_exponentialSmoothing():
     source = pd.DataFrame(
         data=[
@@ -202,14 +200,36 @@ def test_exponentialSmoothing():
     assert  (abs(last_row - true_value )  < 1e-6).all()  , 'calculation_error'
 
 
+def test_visMovingAverage():
+    source = pd.DataFrame(
+        data=[
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+        ],
+        columns=["1", "2", "3", "4", "5"],
+    )
+    df_movingAverage = stock_analyzer.movingAverage(
+        source, 3, ["movingAverage" + name for name in source.columns]
+    )
+    sma_example = stock_analyzer.visMovingAverage(source, '3', 3)
 
-
-
+    assert sma_example.layer[0].encoding.x.shorthand == 'index', 'x_axis should be mapped to the x axis'
+    assert sma_example.layer[0].encoding.y.shorthand == '3', 'y_axis should be mapped to the y axis'
+    assert sma_example.layer[0].mark == 'line', 'mark should be a line'
+    assert sma_example.layer[1].encoding.x.shorthand == 'index','x_axis should be mapped to the x axis'
+    assert sma_example.layer[1].encoding.y.shorthand == 'movingAverage3', 'y_axis should be mapped to the y axis'
+    assert sma_example.layer[1].mark == 'line','mark should be a line'
 
 
 
 test_SummaryStats()
 test_movingAverage()
 test_exponentialSmoothing
-test_movingAverage
-test_exponentialSmoothing
+# test_visMovingAverage
+# test_visExpSmoothing
