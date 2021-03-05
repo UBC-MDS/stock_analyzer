@@ -284,7 +284,7 @@ def visExpSmoothing(data, name, alpha):
     else:
         index_name = data.index.name
 
-    plot_c = alt.Chart(df.reset_index(), title = 'Stock Price History with Exponential Smoothing').mark_line().encode(
+    plot_c = alt.Chart(data.reset_index(), title = 'Stock Price History with Exponential Smoothing').mark_line().encode(
         x=index_name,
         y=alt.Y(name, title='Price'),
         color=alt.value("#0abab5")
