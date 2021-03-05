@@ -179,5 +179,30 @@ def test_movingAverage():
         == "Column e can't be converted to floating point"
     )
 
+
+
+def test_exponentialSmoothing():
+    source = pd.DataFrame(
+        data=[
+            [1,	2	,3],
+            [2,	4	,6],
+            [3,	6	,9],
+            [4,	8	,12],
+            [5,	10,	15]
+        ],
+        columns=["1", "2", "3" ],
+    )
+    df_exponentialSmoothing = stock_analyzer.exponentialSmoothing(source,  ["expSmoothing" + name for name in source.columns])
+    assert type(df_exponentialSmoothing) == type(pd.DataFrame()),'type_error'
+    assert len(df_exponentialSmoothing) == len(source),'shape_error'
+    assert df_exponentialSmoothing.columns.to_list()[0] == "expSmoothing1",'naming_error'
+    last_row = np.array(df_exponentialSmoothing.iloc[-1])   
+    true_value = np.array([3.2269, 6.4538, 9.6807])   
+    assert  (abs(last_row - true_value )  < 1e-6).all()  , 'calculation_error'
+
+
+
+
 test_SummaryStats()
 test_movingAverage()
+test_exponentialSmoothing
