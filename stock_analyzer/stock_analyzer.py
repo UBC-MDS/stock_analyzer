@@ -264,7 +264,7 @@ def visMovingAverage(data, name, window):
         
     Returns
     -------
-    sma_plot
+    altair.vegalite.v4.api.LayerChart
         an Altair plot object containing the plot of original movement and the moving average of the stock of interest
     
     Example
@@ -312,7 +312,7 @@ def visExpSmoothing(data, name, alpha):
         
     Returns
     -------
-    expsm_plot
+    altair.vegalite.v4.api.LayerChart
         an Altair plot object containing the plot of original movement and the exponential smoothing of the stock of interest
     
     Example
