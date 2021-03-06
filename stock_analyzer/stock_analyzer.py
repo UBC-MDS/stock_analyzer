@@ -5,7 +5,7 @@ import altair as alt
 import warnings
 
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
-    """[Using Autoregressive Integrated Moving Average (ARIMA) method to profile stock data]
+    """[Generate summary statistics for profile stock data]
 
     Args:
         data ([ndarray (structured or homogeneous), Iterable, dict, or DataFrame]): [Input data. It should be convertable to a pandas dataframe.]
