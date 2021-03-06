@@ -190,8 +190,30 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
     
     """
+
+    try:
+        data = pd.DataFrame(data)
+    except ValueError:
+        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+
+    if alpha < 0 or alpha >1:
+        raise ValueError("The value of alpha must between 0 and 1.")
+
     smoothed = []
     for name in data.columns:
+        try:
+            values = data[name].values.astype('float')
+        except TypeError:
+            raise TypeError("Type of Column %s isn't a string or a number " % name)
+        except ValueError:
+            raise ValueError("Column %s can't be converted to floating point" % name)
+
+         _nan_locations = np.argwhere(np.isnan(values))
+        if _nan_locations.shape[0] > 0:
+            raise ValueError(("Column {} has Nan at "+"{} "*_nan_locations.shape[0]).format(name,*_nan_locations))
+
+
+
         pred = []
         values = data[name].values
         St_prev = values[0]
