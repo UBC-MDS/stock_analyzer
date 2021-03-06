@@ -78,7 +78,46 @@ def test_SummaryStats():
         columns=["1", "2", "3", "4", "5"],
     )
 
+    df_summaryStats_4 = stock_analyzer.summaryStats(data_4, measurements=["1", "5"])
+
+    assert type(df_summaryStats_4) == type(pd.DataFrame())
+    assert len(df_summaryStats_4) == 2
+    output_4 = pd.DataFrame(
+        data=[
+            ["1", 1.0, 1.0, 1.0, 0.0, 0.0],
+            ["5", 5.0, 5.0, 5.0, 0.0, 0.0],
+        ],
+        columns=["measurement", "mean", "min", "max", "volatility", "return"],
+    )
+    assert df_summaryStats_4.equals(output_4)
+
     # numpy Nan test
+    data_5 = pd.DataFrame(
+        data=[
+            [1, np.nan, 3, 4, 5],
+            [np.nan, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+        ],
+        columns=["1", "2", "3", "4", "5"],
+    )
+
+    df_summaryStats_5 = stock_analyzer.summaryStats(data_5, measurements=["1", "2"])
+
+    assert type(df_summaryStats_5) == type(pd.DataFrame())
+    assert len(df_summaryStats_5) == 2
+    output_5 = pd.DataFrame(
+        data=[
+            ["1", 1.0, 1.0, 1.0, 0.0, 0.0],
+            ["2", 2.0, 2.0, 2.0, 0.0, np.nan],
+        ],
+        columns=["measurement", "mean", "min", "max", "volatility", "return"],
+    )
+    assert df_summaryStats_5.equals(output_5)
 
     # normal test
     data_6 = pd.DataFrame(
@@ -95,10 +134,10 @@ def test_SummaryStats():
         columns=["1", "2", "3", "4", "5"],
     )
 
-    df_summaryStats = stock_analyzer.summaryStats(data_6, measurements=["1", "2"])
+    df_summaryStats_6 = stock_analyzer.summaryStats(data_6, measurements=["1", "2"])
 
-    assert type(df_summaryStats) == type(pd.DataFrame())
-    assert len(df_summaryStats) == 2
+    assert type(df_summaryStats_6) == type(pd.DataFrame())
+    assert len(df_summaryStats_6) == 2
 
 
 def test_movingAverage():
@@ -249,37 +288,46 @@ def test_visMovingAverage():
 
     # dataframe with index name
     source_2 = pd.DataFrame(
-    data=[
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-    ],
-    columns=["1", "2", "3", "4", "5"],
-    index=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017],
+        data=[
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+        ],
+        columns=["1", "2", "3", "4", "5"],
+        index=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017],
     )
-    source_2.index.names = ['Year']
+    source_2.index.names = ["Year"]
 
-    sma_example_2 = stock_analyzer.visMovingAverage(source_2, '3', 3)
+    sma_example_2 = stock_analyzer.visMovingAverage(source_2, "3", 3)
 
-    assert sma_example_2.layer[0].encoding.x.shorthand == 'Year', 'x_axis should be mapped to the x axis'
-    assert sma_example_2.layer[0].encoding.y.shorthand == '3', 'y_axis should be mapped to the y axis'
-    assert sma_example_2.layer[0].mark == 'line', 'mark should be a line'
-    assert sma_example_2.layer[1].encoding.x.shorthand == 'Year','x_axis should be mapped to the x axis'
-    assert sma_example_2.layer[1].encoding.y.shorthand == 'movingAverage3', 'y_axis should be mapped to the y axis'
-    assert sma_example_2.layer[1].mark == 'line','mark should be a line'
+    assert (
+        sma_example_2.layer[0].encoding.x.shorthand == "Year"
+    ), "x_axis should be mapped to the x axis"
+    assert (
+        sma_example_2.layer[0].encoding.y.shorthand == "3"
+    ), "y_axis should be mapped to the y axis"
+    assert sma_example_2.layer[0].mark == "line", "mark should be a line"
+    assert (
+        sma_example_2.layer[1].encoding.x.shorthand == "Year"
+    ), "x_axis should be mapped to the x axis"
+    assert (
+        sma_example_2.layer[1].encoding.y.shorthand == "movingAverage3"
+    ), "y_axis should be mapped to the y axis"
+    assert sma_example_2.layer[1].mark == "line", "mark should be a line"
 
     # test exception handling
     with raises(ValueError) as bad_ex:
-        stock_analyzer.visMovingAverage(source_2, 'hello', 3)
+        stock_analyzer.visMovingAverage(source_2, "hello", 3)
     assert (
         str(bad_ex.value)
         == "Your input name does not match with the dataframe column name! Please enter valid column name!"
     )
+
 
 def test_visExpSmoothing():
     # dataframe with no index name
@@ -316,7 +364,7 @@ def test_visExpSmoothing():
     assert exp_plot.layer[0].mark == "line", "mark should be a line"
     assert exp_plot.layer[1].mark == "line", "mark should be a line"
 
-   # dataframe with index name
+    # dataframe with index name
     source_2 = pd.DataFrame(
         data=[
             [1, 2, 3, 4, 5],
@@ -330,9 +378,8 @@ def test_visExpSmoothing():
         ],
         columns=["1", "2", "3", "4", "5"],
         index=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017],
-
     )
-    source_2.index.names = ['Year']
+    source_2.index.names = ["Year"]
     exp_plot_2 = stock_analyzer.visExpSmoothing(source_2, "2", 0.5)
 
     assert (
