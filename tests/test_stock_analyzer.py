@@ -230,9 +230,6 @@ def test_visMovingAverage():
         ],
         columns=["1", "2", "3", "4", "5"],
     )
-    df_movingAverage = stock_analyzer.movingAverage(
-        source, 3, ["movingAverage" + name for name in source.columns]
-    )
     sma_example = stock_analyzer.visMovingAverage(source, "3", 3)
 
     assert (
@@ -267,11 +264,7 @@ def test_visMovingAverage():
     )
     source_2.index.names = ['Year']
 
-    df_movingAverage = stock_analyzer.movingAverage(
-        source_2, 3, ["movingAverage" + name for name in source_2.columns]
-    )
     sma_example_2 = stock_analyzer.visMovingAverage(source_2, '3', 3)
-
 
     assert sma_example_2.layer[0].encoding.x.shorthand == 'Year', 'x_axis should be mapped to the x axis'
     assert sma_example_2.layer[0].encoding.y.shorthand == '3', 'y_axis should be mapped to the y axis'
@@ -280,6 +273,13 @@ def test_visMovingAverage():
     assert sma_example_2.layer[1].encoding.y.shorthand == 'movingAverage3', 'y_axis should be mapped to the y axis'
     assert sma_example_2.layer[1].mark == 'line','mark should be a line'
 
+    # test exception handling
+    with raises(ValueError) as bad_ex:
+        stock_analyzer.visMovingAverage(source_2, 'hello', 3)
+    assert (
+        str(bad_ex.value)
+        == "Your input name does not match with the dataframe column name! Please enter valid column name!"
+    )
 
 def test_visExpSmoothing():
     # dataframe with no index name
@@ -351,3 +351,11 @@ def test_visExpSmoothing():
 
     assert exp_plot_2.layer[0].mark == "line", "mark should be a line"
     assert exp_plot_2.layer[1].mark == "line", "mark should be a line"
+
+    # test exception handling
+    with raises(ValueError) as bad_ex_2:
+        stock_analyzer.visExpSmoothing(source_2, "hello", 0.5)
+    assert (
+        str(bad_ex_2.value)
+        == "Your input name does not match with the dataframe column name! Please enter valid column name!"
+    )
