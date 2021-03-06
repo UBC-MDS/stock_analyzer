@@ -230,7 +230,7 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         except ValueError:
             raise ValueError("Column %s can't be converted to floating point" % name)
 
-         _nan_locations = np.argwhere(np.isnan(values))
+        _nan_locations = np.argwhere(np.isnan(values))
         if _nan_locations.shape[0] > 0:
             raise ValueError(("Column {} has Nan at "+"{} "*_nan_locations.shape[0]).format(name,*_nan_locations))
 
