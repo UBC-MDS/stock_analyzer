@@ -209,7 +209,7 @@ def visMovingAverage(data, name, window):
     """[Visualizing trends of stock by using moving average]
     Args:
         data ([pandas.core.frame.DataFrame]): [Input pandas dataframe of stock of interest]
-        name ([str]): [Column to be used in moving average calcuation (such as Close, Adj Close)]
+        name ([str]): [Column to be used in moving average calculation (such as Close, Adj Close)]
         window ([int]): [Size of the window (number of days) used in moving average calculation]
         
     Returns:
