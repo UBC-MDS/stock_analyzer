@@ -43,11 +43,22 @@ There are also multiple python packages dedicated to financial analyses. Example
 
 ## Dependencies
 
-- TODO
+- pytest = \^6.2.2
+- pytest-cov = \^2.11.1
+- codecov = \^2.1.11
+- python-semantic-release = \^7.15.0
+- flake8 = \^3.8.4
+- Sphinx = \^3.5.1
+- sphinxcontrib-napoleon = \^0.7
+- matplotlib = \^3.3.4
+- pandas-datareader = \^0.9.0
+- pandas = \^1.2.3
+- altair = \^4.1.0
+- numpy = \^1.20.1
 
 ## Usage
 
-- TODO
+`from stock_analyzer import stock_analyzer` 
 
 ## Documentation
 
