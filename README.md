@@ -121,12 +121,14 @@ stock_analyzer.exponentialSmoothing(df,['exponentialSmoothing'+ name for name in
 
 
 ```Python
-stock_analyzer.visualizeMovingAverage(df,'Close', 50)
+stock_analyzer.visMovingAverage(df,'Close', 50)
 ```
+![alt text](visMovingAverage.png)
 
 ```Python
 stock_analyzer.visExpSmoothing(df,'Close', 0.3)
 ```
+![alt text](visExpSmoothing.png)
 
 ## Documentation
 

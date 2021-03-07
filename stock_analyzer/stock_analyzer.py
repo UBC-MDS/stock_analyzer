@@ -270,7 +270,7 @@ def visMovingAverage(data, name, window):
     Example
     -------
     >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-    >>> visualizeMovingAverage(df,'Close', 50)
+    >>> visMovingAverage(df,'Close', 50)
     """
     if name not in data.columns:
         raise ValueError("Your input name does not match with the dataframe column name! Please enter valid column name!")
