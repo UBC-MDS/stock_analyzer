@@ -190,7 +190,7 @@ def movingAverage(data, window, newColumnNames):
 
         values = np.insert(values, 0, [values[0] for i in range(window - 1)])
         avg = [
-            np.average(values[(i - window + 1) : (i + 1)])
+            np.average(values[(i - window + 1): (i + 1)])
             for i in range(window - 1, len(values))
         ]
         avgs.append(avg)

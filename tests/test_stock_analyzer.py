@@ -85,7 +85,7 @@ def test_SummaryStats():
         data_4, measurements=["1", "5"]
     )
 
-    assert type(df_summaryStats_4) == type(pd.DataFrame())
+    assert isinstance(df_summaryStats_4, pd.core.frame.DataFrame)
     assert len(df_summaryStats_4) == 2
     output_4 = pd.DataFrame(
         data=[
@@ -115,7 +115,7 @@ def test_SummaryStats():
         data_5, measurements=["1", "2"]
     )
 
-    assert type(df_summaryStats_5) == type(pd.DataFrame())
+    assert isinstance(df_summaryStats_5, pd.core.frame.DataFrame)
     assert len(df_summaryStats_5) == 2
     output_5 = pd.DataFrame(
         data=[
