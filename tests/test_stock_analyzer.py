@@ -79,7 +79,46 @@ def test_SummaryStats():
         columns=["1", "2", "3", "4", "5"],
     )
 
+    df_summaryStats_4 = stock_analyzer.summaryStats(data_4, measurements=["1", "5"])
+
+    assert type(df_summaryStats_4) == type(pd.DataFrame())
+    assert len(df_summaryStats_4) == 2
+    output_4 = pd.DataFrame(
+        data=[
+            ["1", 1.0, 1.0, 1.0, 0.0, 0.0],
+            ["5", 5.0, 5.0, 5.0, 0.0, 0.0],
+        ],
+        columns=["measurement", "mean", "min", "max", "volatility", "return"],
+    )
+    assert df_summaryStats_4.equals(output_4)
+
     # numpy Nan test
+    data_5 = pd.DataFrame(
+        data=[
+            [1, np.nan, 3, 4, 5],
+            [np.nan, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5],
+        ],
+        columns=["1", "2", "3", "4", "5"],
+    )
+
+    df_summaryStats_5 = stock_analyzer.summaryStats(data_5, measurements=["1", "2"])
+
+    assert type(df_summaryStats_5) == type(pd.DataFrame())
+    assert len(df_summaryStats_5) == 2
+    output_5 = pd.DataFrame(
+        data=[
+            ["1", 1.0, 1.0, 1.0, 0.0, 0.0],
+            ["2", 2.0, 2.0, 2.0, 0.0, np.nan],
+        ],
+        columns=["measurement", "mean", "min", "max", "volatility", "return"],
+    )
+    assert df_summaryStats_5.equals(output_5)
 
     # normal test
     data_6 = pd.DataFrame(
@@ -214,6 +253,7 @@ def test_exponentialSmoothing():
     assert len(df_exponentialSmoothing) == len(source), "shape_error"
     assert (df_exponentialSmoothing.columns.to_list()
             [0] == "expSmoothing1"), "naming_error"
+
     last_row = np.array(df_exponentialSmoothing.iloc[-1])
     true_value = np.array([3.2269, 6.4538, 9.6807])
     assert (abs(last_row - true_value) < 1e-6).all(), "calculation_error"
@@ -224,6 +264,7 @@ def test_exponentialSmoothing():
                 "expSmoothing" + name for name in source.columns])
     assert (str(execinfo_0.value)
             == "Your input data cannot be converted to a pandas dataframe.")
+
 
     # panda NA test
     data_1 = pd.DataFrame(
@@ -248,7 +289,6 @@ def test_exponentialSmoothing():
             [np.NaN, 2, 3, 4, 5],
             [1, 2, 3, 4, 5],
             [np.NaN, 2, 3, 4, 5],
-
         ],
         columns=["e", "2", "3", "4", "5"],
     )
@@ -264,17 +304,25 @@ def test_exponentialSmoothing():
             ["p", 2, 3, 4, 5],
             [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5],
-
         ],
         columns=["e", "2", "3", "4", "5"],
     )
     with raises(ValueError) as execinfo_3:
-        stock_analyzer.exponentialSmoothing(
-            data_3, [name for name in source.columns])
-    assert str(
-        execinfo_3.value) == "Column e can't be converted to floating point"
+        stock_analyzer.exponentialSmoothing(data_3, [name for name in source.columns])
+    assert str(execinfo_3.value) == "Column e can't be converted to floating point"
 
-    print('All tests passed for exponentialSmoothing()')
+    # wrong alpha value tests
+    with raises(ValueError) as execinfo_4:
+        stock_analyzer.exponentialSmoothing(
+            source, ["expSmoothing" + name for name in source.columns], alpha=-1
+        )
+    assert str(execinfo_4.value) == "The value of alpha must between 0 and 1."
+
+    with raises(ValueError) as execinfo_5:
+        stock_analyzer.exponentialSmoothing(
+            source, ["expSmoothing" + name for name in source.columns], alpha=2
+        )
+    assert str(execinfo_5.value) == "The value of alpha must between 0 and 1."
 
 
 def test_visMovingAverage():
@@ -325,24 +373,28 @@ def test_visMovingAverage():
         columns=["1", "2", "3", "4", "5"],
         index=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017],
     )
-    source_2.index.names = ['Year']
+    source_2.index.names = ["Year"]
 
-    sma_example_2 = stock_analyzer.visMovingAverage(source_2, '3', 3)
+    sma_example_2 = stock_analyzer.visMovingAverage(source_2, "3", 3)
 
-    assert sma_example_2.layer[0].encoding.x.shorthand == 'Year', \
-        'x_axis should be mapped to the x axis'
-    assert sma_example_2.layer[0].encoding.y.shorthand == '3', \
-        'y_axis should be mapped to the y axis'
-    assert sma_example_2.layer[0].mark == 'line', 'mark should be a line'
-    assert sma_example_2.layer[1].encoding.x.shorthand == 'Year', \
-        'x_axis should be mapped to the x axis'
-    assert sma_example_2.layer[1].encoding.y.shorthand == 'movingAverage3', \
-        'y_axis should be mapped to the y axis'
-    assert sma_example_2.layer[1].mark == 'line', 'mark should be a line'
+    assert (
+        sma_example_2.layer[0].encoding.x.shorthand == "Year"
+    ), "x_axis should be mapped to the x axis"
+    assert (
+        sma_example_2.layer[0].encoding.y.shorthand == "3"
+    ), "y_axis should be mapped to the y axis"
+    assert sma_example_2.layer[0].mark == "line", "mark should be a line"
+    assert (
+        sma_example_2.layer[1].encoding.x.shorthand == "Year"
+    ), "x_axis should be mapped to the x axis"
+    assert (
+        sma_example_2.layer[1].encoding.y.shorthand == "movingAverage3"
+    ), "y_axis should be mapped to the y axis"
+    assert sma_example_2.layer[1].mark == "line", "mark should be a line"
 
     # test exception handling
     with raises(ValueError) as bad_ex:
-        stock_analyzer.visMovingAverage(source_2, 'hello', 3)
+        stock_analyzer.visMovingAverage(source_2, "hello", 3)
     assert (
         str(bad_ex.value)
         == "Your input name does not match with the dataframe column name! \
@@ -399,9 +451,8 @@ def test_visExpSmoothing():
         ],
         columns=["1", "2", "3", "4", "5"],
         index=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017],
-
     )
-    source_2.index.names = ['Year']
+    source_2.index.names = ["Year"]
     exp_plot_2 = stock_analyzer.visExpSmoothing(source_2, "2", 0.5)
 
     assert (
