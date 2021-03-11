@@ -1,13 +1,7 @@
-from stock_analyzer import __version__
 from stock_analyzer import stock_analyzer
 from pytest import raises
 import pandas as pd
 import numpy as np
-
-
-def test_version():
-    assert __version__ == "0.1.0"
-
 
 def test_SummaryStats():
 
