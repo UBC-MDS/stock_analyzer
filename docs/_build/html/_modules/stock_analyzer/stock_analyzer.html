@@ -37,6 +37,7 @@
 <span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
+
 <div class="viewcode-block" id="summaryStats"><a class="viewcode-back" href="../../source/stock_analyzer.html#stock_analyzer.stock_analyzer.summaryStats">[docs]</a><span class="k">def</span> <span class="nf">summaryStats</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">measurements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;High&quot;</span><span class="p">,</span> <span class="s2">&quot;Low&quot;</span><span class="p">,</span> <span class="s2">&quot;Open&quot;</span><span class="p">,</span> <span class="s2">&quot;Close&quot;</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate summary statistics for profile stock data</span>
@@ -81,7 +82,8 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;measurement&quot;</span><span class="p">:</span> <span class="p">[],</span>
@@ -93,21 +95,25 @@
         <span class="p">}</span>
         <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">measurements</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">measurement</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Your specified measurement &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; is not a column name of the data. Please double check the column names in data.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Your specified measurement &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; is not a column name of the data. Please double check the column names in data.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">data_measurement</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">data_measurement</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data in column &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; of your input data cannot be converted to numeric format.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Data in column &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; of your input data cannot be converted to numeric format.&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;measurement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;volatility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
-                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;return&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;return&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="movingAverage"><a class="viewcode-back" href="../../source/stock_analyzer.html#stock_analyzer.stock_analyzer.movingAverage">[docs]</a><span class="k">def</span> <span class="nf">movingAverage</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">newColumnNames</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -164,30 +170,44 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
 
     <span class="n">avgs</span> <span class="o">=</span> <span class="p">[]</span>
-    
+
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span>
+                <span class="n">name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span>
+                <span class="n">name</span><span class="p">)</span>
+
         <span class="n">_nan_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">*</span><span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="o">*</span><span class="n">_nan_locations</span><span class="p">))</span>
-        
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span> <span class="o">+</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="o">*</span>
+                <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="o">*</span>
+                <span class="n">_nan_locations</span><span class="p">))</span>
+
         <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
         <span class="n">avg</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">window</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">window</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="p">]</span>
         <span class="n">avgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg</span><span class="p">)</span>
 
-    <span class="n">df_avgs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">avgs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span><span class="p">)</span>
+    <span class="n">df_avgs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">avgs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df_avgs</span></div>
 
 
@@ -243,15 +263,15 @@
 <span class="sd">    2020-12-15	                      3689.794617	         3651.777541	                3669.528624	                 3673.629656	         4.582920e+09	                3673.629656</span>
 <span class="sd">    2020-12-16	                      3696.237238	         3662.815300	                3677.545037	                 3681.891736	         4.425129e+09	                3681.891736</span>
 <span class="sd">    2020-12-17	                      3704.902102	         3677.231745	                3688.376496	                 3694.068209	         4.353069e+09	                3694.068209</span>
-<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">alpha</span> <span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The value of alpha must between 0 and 1.&quot;</span><span class="p">)</span>
 
     <span class="n">smoothed</span> <span class="o">=</span> <span class="p">[]</span>
@@ -259,9 +279,13 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span>
+                <span class="n">name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span>
+                <span class="n">name</span><span class="p">)</span>
 
         <span class="n">_nan_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -303,7 +327,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; visualizeMovingAverage(df,&#39;Close&#39;, 50)</span>
+<span class="sd">    &gt;&gt;&gt; visMovingAverage(df,&#39;Close&#39;, 50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input name does not match with the dataframe column name! Please enter valid column name!&quot;</span><span class="p">)</span>
@@ -328,7 +352,6 @@
     
     <span class="n">sma_plot</span> <span class="o">=</span> <span class="n">plot_a</span> <span class="o">+</span> <span class="n">plot_b</span>
     <span class="k">return</span> <span class="n">sma_plot</span></div>
-
 
 <div class="viewcode-block" id="visExpSmoothing"><a class="viewcode-back" href="../../source/stock_analyzer.html#stock_analyzer.stock_analyzer.visExpSmoothing">[docs]</a><span class="k">def</span> <span class="nf">visExpSmoothing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
