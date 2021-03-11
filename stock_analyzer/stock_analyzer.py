@@ -63,14 +63,16 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
         for measurement in measurements:
             if measurement not in list(data.columns):
                 raise ValueError(
-                    f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
+                    f"Your specified measurement '{measurement}' is not a column name of the data. \
+            Please double check the column names in data.")
             else:
                 data_measurement = data[measurement]
                 try:
                     data_measurement = pd.to_numeric(data_measurement)
                 except ValueError:
                     raise ValueError(
-                        f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
+                        f"Data in column '{measurement}' of your input data cannot be converted to \
+            numeric format.")
                 else:
                     stats["measurement"].append(measurement)
                     stats["mean"].append(data_measurement.mean())
@@ -147,7 +149,8 @@ def movingAverage(data, window, newColumnNames):
             values = data[name].values.astype('float')
         except TypeError:
             raise TypeError(
-                "Type of Column %s isn't a string or a number " %
+                "Type of Column %s isn't a string \
+        or a number " %
                 name)
         except ValueError:
             raise ValueError(
@@ -247,7 +250,8 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
             values = data[name].values.astype('float')
         except TypeError:
             raise TypeError(
-                "Type of Column %s isn't a string or a number " %
+                "Type of Column %s isn't a string \
+        or a number " %
                 name)
         except ValueError:
             raise ValueError(
@@ -297,7 +301,8 @@ def visMovingAverage(data, name, window):
     >>> visMovingAverage(df,'Close', 50)
     """
     if name not in data.columns:
-        raise ValueError("Your input name does not match with the dataframe column name! Please enter valid column name!")
+        raise ValueError("Your input name does not match with the dataframe column name! \
+            Please enter valid column name!")
 
     df_avgs = movingAverage(data, window, [movingAverage.__name__ + name for name in data.columns])
     
@@ -344,7 +349,8 @@ def visExpSmoothing(data, name, alpha):
     >>> visExpSmoothing(df,'Close', 0.3)
     """
     if name not in data.columns:
-        raise ValueError("Your input name does not match with the dataframe column name! Please enter valid column name!")
+        raise ValueError("Your input name does not match with the dataframe column name! \
+            Please enter valid column name!")
 
     df_smoothed = exponentialSmoothing(data, [exponentialSmoothing.__name__ + name for name in data.columns], alpha)
     
