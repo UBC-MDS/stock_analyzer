@@ -1,8 +1,8 @@
-import pandas_datareader as web
+#import pandas_datareader as web
+#import warnings
 import numpy as np
 import pandas as pd
 import altair as alt
-import warnings
 
 
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
