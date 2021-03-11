@@ -3,7 +3,6 @@ from stock_analyzer import stock_analyzer
 from pytest import raises
 import pandas as pd
 import numpy as np
-import altair as alt
 
 
 def test_version():
@@ -39,7 +38,8 @@ def test_SummaryStats():
         stock_analyzer.summaryStats(data_2, measurements=["High"])
     assert (
         str(execinfo_2.value)
-        == "Your specified measurement 'High' is not a column name of the data. Please double check the column names in data."
+        == "Your specified measurement 'High' is not a column name of the data. \
+            Please double check the column names in data."
     )
 
     # Non-numeric data
@@ -60,7 +60,8 @@ def test_SummaryStats():
         stock_analyzer.summaryStats(data_3, measurements=["e", "2", "3"])
     assert (
         str(execinfo_3.value)
-        == "Data in column 'e' of your input data cannot be converted to numeric format."
+        == "Data in column 'e' of your input data cannot be converted to \
+            numeric format."
     )
 
     # pandas NA test
@@ -134,10 +135,11 @@ def test_SummaryStats():
         columns=["1", "2", "3", "4", "5"],
     )
 
-    df_summaryStats_6 = stock_analyzer.summaryStats(data_6, measurements=["1", "2"])
+    df_summaryStats = stock_analyzer.summaryStats(
+        data_6, measurements=["1", "2"])
 
-    assert type(df_summaryStats_6) == type(pd.DataFrame())
-    assert len(df_summaryStats_6) == 2
+    assert isinstance(df_summaryStats, type(pd.DataFrame()))
+    assert len(df_summaryStats) == 2
 
 
 def test_movingAverage():
@@ -160,10 +162,11 @@ def test_movingAverage():
         source, 3, ["movingAverage" + name for name in source.columns]
     )
 
-    assert type(df_movingAverage) == type(pd.DataFrame())
+    assert isinstance(df_movingAverage, type(pd.DataFrame()))
     assert len(df_movingAverage) == len(source)
     assert df_movingAverage.columns.to_list()[0] == "movingAverage1"
-    assert list(df_movingAverage["movingAverage1"].values) == [1, 1, 1, 1, 1, 1, 1, 1]
+    assert list(df_movingAverage["movingAverage1"].values) == [
+        1, 1, 1, 1, 1, 1, 1, 1]
 
     # single string test
     data_0 = "this is a string"
@@ -192,7 +195,8 @@ def test_movingAverage():
         stock_analyzer.movingAverage(
             data_1, 3, ["movingAverage" + name for name in data_1.columns]
         )
-    assert str(execinfo_1.value) == "Type of Column e isn't a string or a number "
+    assert str(execinfo_1.value) == "Type of Column e isn't a string \
+        or a number "
 
     # numpy NaN test
     data_2 = pd.DataFrame(
@@ -232,7 +236,8 @@ def test_movingAverage():
         stock_analyzer.movingAverage(
             data_3, 3, ["movingAverage" + name for name in source.columns]
         )
-    assert str(execinfo_3.value) == "Column e can't be converted to floating point"
+    assert str(
+        execinfo_3.value) == "Column e can't be converted to floating point"
 
 
 def test_exponentialSmoothing():
@@ -241,25 +246,25 @@ def test_exponentialSmoothing():
         columns=["1", "2", "3"],
     )
     df_exponentialSmoothing = stock_analyzer.exponentialSmoothing(
-        source, ["expSmoothing" + name for name in source.columns]
-    )
-    assert type(df_exponentialSmoothing) == type(pd.DataFrame()), "type_error"
+        source, ["expSmoothing" + name for name in source.columns])
+    assert isinstance(
+        df_exponentialSmoothing, type(
+            pd.DataFrame())), "type_error"
     assert len(df_exponentialSmoothing) == len(source), "shape_error"
-    assert (
-        df_exponentialSmoothing.columns.to_list()[0] == "expSmoothing1"
-    ), "naming_error"
+    assert (df_exponentialSmoothing.columns.to_list()
+            [0] == "expSmoothing1"), "naming_error"
+
     last_row = np.array(df_exponentialSmoothing.iloc[-1])
     true_value = np.array([3.2269, 6.4538, 9.6807])
     assert (abs(last_row - true_value) < 1e-6).all(), "calculation_error"
 
     with raises(ValueError) as execinfo_0:
         stock_analyzer.exponentialSmoothing(
-            "not a dataframe", ["expSmoothing" + name for name in source.columns]
-        )
-    assert (
-        str(execinfo_0.value)
-        == "Your input data cannot be converted to a pandas dataframe."
-    )
+            'not a dataframe', [
+                "expSmoothing" + name for name in source.columns])
+    assert (str(execinfo_0.value)
+            == "Your input data cannot be converted to a pandas dataframe.")
+
 
     # panda NA test
     data_1 = pd.DataFrame(
@@ -272,8 +277,10 @@ def test_exponentialSmoothing():
         columns=["e", "2", "3", "4", "5"],
     )
     with raises(TypeError) as execinfo_1:
-        stock_analyzer.exponentialSmoothing(data_1, [name for name in data_1.columns])
-    assert str(execinfo_1.value) == "Type of Column e isn't a string or a number "
+        stock_analyzer.exponentialSmoothing(
+            data_1, [name for name in data_1.columns])
+    assert str(execinfo_1.value) == "Type of Column e isn't a string \
+        or a number "
 
     # numpy NaN test
     data_2 = pd.DataFrame(
@@ -286,7 +293,8 @@ def test_exponentialSmoothing():
         columns=["e", "2", "3", "4", "5"],
     )
     with raises(ValueError) as execinfo_2:
-        stock_analyzer.exponentialSmoothing(data_2, [name for name in source.columns])
+        stock_analyzer.exponentialSmoothing(
+            data_2, [name for name in source.columns])
     assert str(execinfo_2.value) == "Column e has Nan at [1] [3] "
 
     # String test
@@ -389,7 +397,8 @@ def test_visMovingAverage():
         stock_analyzer.visMovingAverage(source_2, "hello", 3)
     assert (
         str(bad_ex.value)
-        == "Your input name does not match with the dataframe column name! Please enter valid column name!"
+        == "Your input name does not match with the dataframe column name! \
+            Please enter valid column name!"
     )
 
 
@@ -468,5 +477,6 @@ def test_visExpSmoothing():
         stock_analyzer.visExpSmoothing(source_2, "hello", 0.5)
     assert (
         str(bad_ex_2.value)
-        == "Your input name does not match with the dataframe column name! Please enter valid column name!"
+        == "Your input name does not match with the dataframe column name! \
+            Please enter valid column name!"
     )

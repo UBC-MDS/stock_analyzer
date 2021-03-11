@@ -4,6 +4,7 @@ import pandas as pd
 import altair as alt
 import warnings
 
+
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
     """
     Generate summary statistics for profile stock data
@@ -48,7 +49,8 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
     else:
         stats = {
             "measurement": [],
@@ -60,21 +62,25 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
         }
         for measurement in measurements:
             if measurement not in list(data.columns):
-                raise ValueError(f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
+                raise ValueError(
+                    f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
             else:
                 data_measurement = data[measurement]
                 try:
                     data_measurement = pd.to_numeric(data_measurement)
                 except ValueError:
-                    raise ValueError(f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
+                    raise ValueError(
+                        f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
                 else:
                     stats["measurement"].append(measurement)
                     stats["mean"].append(data_measurement.mean())
                     stats["min"].append(data_measurement.min())
                     stats["max"].append(data_measurement.max())
                     stats["volatility"].append(data_measurement.std())
-                    stats["return"].append((list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
+                    stats["return"].append(
+                        (list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
         return pd.DataFrame(stats)
+
 
 def movingAverage(data, window, newColumnNames):
     """
@@ -131,30 +137,44 @@ def movingAverage(data, window, newColumnNames):
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
 
     avgs = []
-    
+
     for name in data.columns:
         try:
             values = data[name].values.astype('float')
         except TypeError:
-            raise TypeError("Type of Column %s isn't a string or a number " % name)
+            raise TypeError(
+                "Type of Column %s isn't a string or a number " %
+                name)
         except ValueError:
-            raise ValueError("Column %s can't be converted to floating point" % name)
-        
+            raise ValueError(
+                "Column %s can't be converted to floating point" %
+                name)
+
         _nan_locations = np.argwhere(np.isnan(values))
         if _nan_locations.shape[0] > 0:
-            raise ValueError(("Column {} has Nan at "+"{} "*_nan_locations.shape[0]).format(name,*_nan_locations))
-        
+            raise ValueError(
+                ("Column {} has Nan at " +
+                "{} " *
+                _nan_locations.shape[0]).format(
+                name,
+                *
+                _nan_locations))
+
         values = np.insert(values, 0, [values[0] for i in range(window - 1)])
         avg = [
-            np.average(values[i - window + 1 : i + 1])
+            np.average(values[i - window + 1: i + 1])
             for i in range(window - 1, len(values))
         ]
         avgs.append(avg)
 
-    df_avgs = pd.DataFrame(np.array(avgs).T, index=data.index, columns=newColumnNames)
+    df_avgs = pd.DataFrame(
+    np.array(avgs).T,
+    index=data.index,
+     columns=newColumnNames)
     return df_avgs
 
 
@@ -210,15 +230,15 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
     2020-12-15	                      3689.794617	         3651.777541	                3669.528624	                 3673.629656	         4.582920e+09	                3673.629656
     2020-12-16	                      3696.237238	         3662.815300	                3677.545037	                 3681.891736	         4.425129e+09	                3681.891736
     2020-12-17	                      3704.902102	         3677.231745	                3688.376496	                 3694.068209	         4.353069e+09	                3694.068209
-    
     """
 
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
 
-    if alpha < 0 or alpha >1:
+    if alpha < 0 or alpha > 1:
         raise ValueError("The value of alpha must between 0 and 1.")
 
     smoothed = []
@@ -226,9 +246,13 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         try:
             values = data[name].values.astype('float')
         except TypeError:
-            raise TypeError("Type of Column %s isn't a string or a number " % name)
+            raise TypeError(
+                "Type of Column %s isn't a string or a number " %
+                name)
         except ValueError:
-            raise ValueError("Column %s can't be converted to floating point" % name)
+            raise ValueError(
+                "Column %s can't be converted to floating point" %
+                name)
 
         _nan_locations = np.argwhere(np.isnan(values))
         if _nan_locations.shape[0] > 0:
@@ -295,7 +319,6 @@ def visMovingAverage(data, name, window):
     
     sma_plot = plot_a + plot_b
     return sma_plot
-
 
 def visExpSmoothing(data, name, alpha):
     """
