@@ -24,6 +24,7 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
 
     Example
     -------
+    >>> This line is added to test whether long doc lines pass the test so that we can make adjustments
     >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01',
     >>> end='2020-12-17') df High          Low         Open        Close Volume
     >>> Adj Close Date 2012-01-03  1284.619995  1258.859985 1258.859985
