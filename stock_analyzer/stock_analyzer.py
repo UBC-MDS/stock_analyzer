@@ -4,15 +4,19 @@ import pandas as pd
 import altair as alt
 import warnings
 
+
 def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
     """[Generate summary statistics for profile stock data]
 
     Args:
-        data ([ndarray (structured or homogeneous), Iterable, dict, or DataFrame]): [Input data. It should be convertable to a pandas dataframe.]
-        measurements ([str]): [All elements should be column names of data. The calculation of statistics will be based on the specified measurement of stock price.]
+        data ([ndarray (structured or homogeneous), Iterable, dict, or DataFrame]):
+        [Input data. It should be convertable to a pandas dataframe.]
+        measurements ([str]): [All elements should be column names of data.
+        The calculation of statistics will be based on the specified measurement of stock price.]
 
     Returns:
-        [pandas.core.frame.DataFrame]: [A Pandas dataframe that contains summary statistics for the specified columns of the data. Statistics calculated include mean price, minimum price, maximum price, volatility and return]
+        [pandas.core.frame.DataFrame]: [A Pandas dataframe that contains summary statistics for the specified columns of the data.
+        Statistics calculated include mean price, minimum price, maximum price, volatility and return]
 
     Examples:
         >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
@@ -41,7 +45,8 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
     else:
         stats = {
             "measurement": [],
@@ -53,21 +58,25 @@ def summaryStats(data, measurements=["High", "Low", "Open", "Close"]):
         }
         for measurement in measurements:
             if measurement not in list(data.columns):
-                raise ValueError(f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
+                raise ValueError(
+                    f"Your specified measurement '{measurement}' is not a column name of the data. Please double check the column names in data.")
             else:
                 data_measurement = data[measurement]
                 try:
                     data_measurement = pd.to_numeric(data_measurement)
                 except ValueError:
-                    raise ValueError(f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
+                    raise ValueError(
+                        f"Data in column '{measurement}' of your input data cannot be converted to numeric format.")
                 else:
                     stats["measurement"].append(measurement)
                     stats["mean"].append(data_measurement.mean())
                     stats["min"].append(data_measurement.min())
                     stats["max"].append(data_measurement.max())
                     stats["volatility"].append(data_measurement.std())
-                    stats["return"].append((list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
+                    stats["return"].append(
+                        (list(data_measurement)[-1] - list(data_measurement)[0]) / list(data_measurement)[0])
         return pd.DataFrame(stats)
+
 
 def movingAverage(data, window, newColumnNames):
     """[Using moving average method to profile stock data]
@@ -117,40 +126,54 @@ def movingAverage(data, window, newColumnNames):
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
 
     avgs = []
-    
+
     for name in data.columns:
         try:
             values = data[name].values.astype('float')
         except TypeError:
-            raise TypeError("Type of Column %s isn't a string or a number " % name)
+            raise TypeError(
+                "Type of Column %s isn't a string or a number " %
+                name)
         except ValueError:
-            raise ValueError("Column %s can't be converted to floating point" % name)
-        
+            raise ValueError(
+                "Column %s can't be converted to floating point" %
+                name)
+
         _nan_locations = np.argwhere(np.isnan(values))
         if _nan_locations.shape[0] > 0:
-            raise ValueError(("Column {} has Nan at "+"{} "*_nan_locations.shape[0]).format(name,*_nan_locations))
-        
+            raise ValueError(
+                ("Column {} has Nan at " +
+                "{} " *
+                _nan_locations.shape[0]).format(
+                name,
+                *
+                _nan_locations))
+
         values = np.insert(values, 0, [values[0] for i in range(window - 1)])
         avg = [
-            np.average(values[i - window + 1 : i + 1])
+            np.average(values[i - window + 1: i + 1])
             for i in range(window - 1, len(values))
         ]
         avgs.append(avg)
 
-    df_avgs = pd.DataFrame(np.array(avgs).T, index=data.index, columns=newColumnNames)
+    df_avgs = pd.DataFrame(
+    np.array(avgs).T,
+    index=data.index,
+     columns=newColumnNames)
     return df_avgs
 
 
 def exponentialSmoothing(data, newColumnNames, alpha=0.3):
-
     """[Using exponential smoothing method to profile stock data]
 
     Args:
         data ([pandas.core.frame.DataFrame]): [Input Pandas dataframe]
-        alpha ([float]): [The smoothing parameter that defines the weighting. It should be between 0 and 1]
+        alpha ([float]): [The smoothing parameter that defines the weighting.
+        It should be between 0 and 1]
         newColumnNames ([str]): [new column names after creating moving average dataframe]
     Returns:
         [pandas.core.frame.DataFrame]: [A Pandas dataframe contains exponential smoothing fits of the data]
@@ -176,7 +199,7 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         >>> df_exponentialSmoothing
 
 	    exponentialSmoothingHigh	exponentialSmoothingLow	exponentialSmoothingOpen	exponentialSmoothingClose	exponentialSmoothingVolume	exponentialSmoothingAdj Close
-        Date						
+        Date
         2012-01-03	1284.619995	1258.859985	1258.859985	1277.060059	3.943710e+09	1277.060059
         2012-01-04	1282.852991	1261.631982	1264.310999	1277.132056	3.838371e+09	1277.132056
         2012-01-05	1282.912108	1262.720391	1268.207714	1278.310457	3.981645e+09	1278.310457
@@ -188,15 +211,16 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         2020-12-15	3689.794617	3651.777541	3669.528624	3673.629656	4.582920e+09	3673.629656
         2020-12-16	3696.237238	3662.815300	3677.545037	3681.891736	4.425129e+09	3681.891736
         2020-12-17	3704.902102	3677.231745	3688.376496	3694.068209	4.353069e+09	3694.068209
-    
+
     """
 
     try:
         data = pd.DataFrame(data)
     except ValueError:
-        raise ValueError("Your input data cannot be converted to a pandas dataframe.")
+        raise ValueError(
+            "Your input data cannot be converted to a pandas dataframe.")
 
-    if alpha < 0 or alpha >1:
+    if alpha < 0 or alpha > 1:
         raise ValueError("The value of alpha must between 0 and 1.")
 
     smoothed = []
@@ -204,9 +228,13 @@ def exponentialSmoothing(data, newColumnNames, alpha=0.3):
         try:
             values = data[name].values.astype('float')
         except TypeError:
-            raise TypeError("Type of Column %s isn't a string or a number " % name)
+            raise TypeError(
+                "Type of Column %s isn't a string or a number " %
+                name)
         except ValueError:
-            raise ValueError("Column %s can't be converted to floating point" % name)
+            raise ValueError(
+                "Column %s can't be converted to floating point" %
+                name)
 
          _nan_locations = np.argwhere(np.isnan(values))
         if _nan_locations.shape[0] > 0:
@@ -264,9 +292,9 @@ def visMovingAverage(data, name, window):
     sma_plot = plot_a + plot_b
     return sma_plot
 
-## Get the stock quote from Yahoo Finance
+# Get the stock quote from Yahoo Finance
 # df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-## Visualize Moving Average
+# Visualize Moving Average
 # visMovingAverage(df, 'Close', 50)
 
 
@@ -307,7 +335,7 @@ def visExpSmoothing(data, name, alpha):
     expsm_plot = plot_c + plot_d
     return expsm_plot
 
-## Get the stock quote from Yahoo Finance
+# Get the stock quote from Yahoo Finance
 # df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01', end='2020-12-17')
-## Visualize Exponential Smoothing
+# Visualize Exponential Smoothing
 # visExpSmoothing(df,'Close', 0.3)
