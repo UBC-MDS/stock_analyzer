@@ -31,11 +31,9 @@
           <div class="body" role="main">
             
   <h1>Source code for stock_analyzer.stock_analyzer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">web</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="summaryStats"><a class="viewcode-back" href="../../source/stock_analyzer.html#stock_analyzer.stock_analyzer.summaryStats">[docs]</a><span class="k">def</span> <span class="nf">summaryStats</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">measurements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;High&quot;</span><span class="p">,</span> <span class="s2">&quot;Low&quot;</span><span class="p">,</span> <span class="s2">&quot;Open&quot;</span><span class="p">,</span> <span class="s2">&quot;Close&quot;</span><span class="p">]):</span>
@@ -45,45 +43,38 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    data: ndarray (structured or homogeneous), Iterable, dict, or DataFrame</span>
-<span class="sd">        input data. It should be convertable to a pandas dataframe</span>
-<span class="sd">    measurements : str</span>
-<span class="sd">        columns to be summarized on. All elements should be column names of data. The calculation of statistics will be based on the specified measurement of stock price.</span>
+<span class="sd">        input data. It should be convertable to a pandas dataframe measurements</span>
+<span class="sd">        : str columns to be summarized on. All elements should be column names</span>
+<span class="sd">        of data. The calculation of statistics will be based on the specified</span>
+<span class="sd">        measurement of stock price.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pandas.core.frame.DataFrame</span>
-<span class="sd">        a Pandas dataframe that contains summary statistics for the specified columns of the data. Statistics calculated include mean price, minimum price, maximum price, volatility and return.</span>
+<span class="sd">    pandas.core.frame.DataFrame a Pandas dataframe that contains summary</span>
+<span class="sd">        statistics for the specified columns of the data. Statistics calculated</span>
+<span class="sd">        include mean price, minimum price, maximum price, volatility and</span>
+<span class="sd">        return.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">                    High          Low         Open        Close      Volume    Adj Close</span>
-<span class="sd">    Date</span>
-<span class="sd">    2012-01-03  1284.619995  1258.859985  1258.859985  1277.060059  3943710000  1277.060059</span>
-<span class="sd">    2012-01-04  1278.729980  1268.099976  1277.030029  1277.300049  3592580000  1277.300049</span>
-<span class="sd">    2012-01-05  1283.050049  1265.260010  1277.300049  1281.060059  4315950000  1281.060059</span>
-<span class="sd">    2012-01-06  1281.839966  1273.339966  1280.930054  1277.810059  3656830000  1277.810059</span>
-<span class="sd">    2012-01-09  1281.989990  1274.550049  1277.829956  1280.699951  3371600000  1280.699951</span>
-<span class="sd">    ...                 ...          ...          ...          ...         ...          ...</span>
-<span class="sd">    2020-12-11  3665.909912  3633.399902  3656.080078  3663.459961  4367150000  3663.459961</span>
-<span class="sd">    2020-12-14  3697.610107  3645.840088  3675.270020  3647.489990  4594920000  3647.489990</span>
-<span class="sd">    2020-12-15  3695.290039  3659.620117  3666.409912  3694.620117  4360280000  3694.620117</span>
-<span class="sd">    2020-12-16  3711.270020  3688.570068  3696.250000  3701.169922  4056950000  3701.169922</span>
-<span class="sd">    2020-12-17  3725.120117  3710.870117  3713.649902  3722.479980  4184930000  3722.479980</span>
+<span class="sd">    &gt;&gt;&gt; from stock_analyzer import stock_analyzer</span>
+<span class="sd">    &gt;&gt;&gt; import pandas_datareader.data as web</span>
+<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
+<span class="sd">    ... end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; stock_analyzer.summaryStats(data = df, measurements=[&quot;Open&quot;,</span>
+<span class="sd">    ... &quot;Volume&quot;])</span>
+<span class="sd">      measurement          mean  ...    volatility    return</span>
+<span class="sd">    0        Open  2.265452e+03  ...  5.835520e+02  1.950010</span>
+<span class="sd">    1      Volume  3.710356e+09  ...  8.710935e+08  0.061166</span>
 
-<span class="sd">    &gt;&gt;&gt; df_summarystats = summaryStats(data = df, measurements=[&quot;Open&quot;, &quot;Volume&quot;])</span>
-<span class="sd">    &gt;&gt;&gt; df_summarystats</span>
-<span class="sd">        start_date	 end_date	    mean	    min	        max	    volatility	 return</span>
-<span class="sd">    0	2020-12-07	2020-12-17	3683.394423	3656.080078	3713.649902	20.641892	0.005121</span>
-<span class="sd">    1	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624</span>
-<span class="sd">    2	2020-11-17	2020-12-17	3646.368641	3559.409912	3713.649902	44.058352	0.028624</span>
+<span class="sd">    [2 rows x 6 columns]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;measurement&quot;</span><span class="p">:</span> <span class="p">[],</span>
@@ -96,14 +87,20 @@
         <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">measurements</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">measurement</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Your specified measurement &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; is not a column name of the data. Please double check the column names in data.&quot;</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s2">&quot;Your specified measurement &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; is not a </span><span class="se">\</span>
+<span class="s2">                    column name of the data. </span><span class="se">\</span>
+<span class="s2">            Please double check the column names in data.&quot;</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">data_measurement</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">data_measurement</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Data in column &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; of your input data cannot be converted to numeric format.&quot;</span><span class="p">)</span>
+                        <span class="sa">f</span><span class="s2">&quot;Data in column &#39;</span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2">&#39; of your input data </span><span class="se">\</span>
+<span class="s2">                        cannot be converted to </span><span class="se">\</span>
+<span class="s2">            numeric format.&quot;</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;measurement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
@@ -111,7 +108,12 @@
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;volatility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_measurement</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
                     <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;return&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="p">(</span>
+                            <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="o">-</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="o">/</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_measurement</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span></div>
 
 
@@ -121,93 +123,64 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data : pandas.core.frame.DataFrame</span>
-<span class="sd">        input Pandas dataframe</span>
-<span class="sd">    window : int</span>
-<span class="sd">        size of the sliding window to compute the moving average</span>
-<span class="sd">    newColumnNames : str</span>
-<span class="sd">        new column names after creating moving average dataframe</span>
+<span class="sd">    data : pandas.core.frame.DataFrame input Pandas dataframe window : int size</span>
+<span class="sd">        of the sliding window to compute the moving average newColumnNames :</span>
+<span class="sd">        str new column names after creating moving average dataframe</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pandas.core.frame.DataFrame </span>
-<span class="sd">        a Pandas dataframe contains moving average from the data</span>
+<span class="sd">    pandas.core.frame.DataFrame a Pandas dataframe contains moving average from</span>
+<span class="sd">        the data</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">                    High          Low         Open        Close      Volume    Adj Close</span>
-<span class="sd">    Date</span>
-<span class="sd">    2012-01-03  1284.619995  1258.859985  1258.859985  1277.060059  3943710000  1277.060059</span>
-<span class="sd">    2012-01-04  1278.729980  1268.099976  1277.030029  1277.300049  3592580000  1277.300049</span>
-<span class="sd">    2012-01-05  1283.050049  1265.260010  1277.300049  1281.060059  4315950000  1281.060059</span>
-<span class="sd">    2012-01-06  1281.839966  1273.339966  1280.930054  1277.810059  3656830000  1277.810059</span>
-<span class="sd">    2012-01-09  1281.989990  1274.550049  1277.829956  1280.699951  3371600000  1280.699951</span>
-<span class="sd">    ...                 ...          ...          ...          ...         ...          ...</span>
-<span class="sd">    2020-12-11  3665.909912  3633.399902  3656.080078  3663.459961  4367150000  3663.459961</span>
-<span class="sd">    2020-12-14  3697.610107  3645.840088  3675.270020  3647.489990  4594920000  3647.489990</span>
-<span class="sd">    2020-12-15  3695.290039  3659.620117  3666.409912  3694.620117  4360280000  3694.620117</span>
-<span class="sd">    2020-12-16  3711.270020  3688.570068  3696.250000  3701.169922  4056950000  3701.169922</span>
-<span class="sd">    2020-12-17  3725.120117  3710.870117  3713.649902  3722.479980  4184930000  3722.479980</span>
+<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;)</span>
 
-<span class="sd">    &gt;&gt;&gt; df_movingAverage = movingAverage(df,100,[&#39;movingAverage&#39;+ name for name in df.columns])</span>
-<span class="sd">    &gt;&gt;&gt; df_movingAverage</span>
-<span class="sd">                movingAverageHigh  movingAverageLow  movingAverageOpen  movingAverageClose  movingAverageVolume  movingAverageAdj Close</span>
-<span class="sd">    Date</span>
-<span class="sd">    2012-01-03        1284.619995       1258.859985        1258.859985         1277.060059         3.943710e+09             1277.060059</span>
-<span class="sd">    2012-01-04        1284.561095       1258.952385        1259.041686         1277.062458         3.940199e+09             1277.062458</span>
-<span class="sd">    2012-01-05        1284.545396       1259.016385        1259.226086         1277.102458         3.943921e+09             1277.102458</span>
-<span class="sd">    2012-01-06        1284.517595       1259.161185        1259.446787         1277.109958         3.941052e+09             1277.109958</span>
-<span class="sd">    2012-01-09        1284.491295       1259.318086        1259.636487         1277.146357         3.935331e+09             1277.146357</span>
-<span class="sd">    ...                       ...               ...                ...                 ...                  ...                     ...</span>
-<span class="sd">    2020-12-11        3459.242998       3416.176194        3438.266194         3438.738198         4.415716e+09             3438.738198</span>
-<span class="sd">    2020-12-14        3463.419199       3420.407996        3442.302495         3442.856499         4.418761e+09             3442.856499</span>
-<span class="sd">    2020-12-15        3468.099500       3425.003696        3446.780793         3447.646401         4.423414e+09             3447.646401</span>
-<span class="sd">    2020-12-16        3472.797900       3429.746897        3451.544893         3452.264001         4.424345e+09             3452.264001</span>
-<span class="sd">    2020-12-17        3477.611902       3434.693899        3456.338691         3457.304402         4.425915e+09             3457.304402</span>
+<span class="sd">    &gt;&gt;&gt; df_movingAverage = movingAverage(df,100,[&#39;movingAverage&#39;+ name for name</span>
+<span class="sd">    &gt;&gt;&gt; in df.columns])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span>
+        <span class="p">)</span>
 
     <span class="n">avgs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span>
-                <span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string </span><span class="se">\</span>
+<span class="s2">        or a number &quot;</span>
+                <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span>
-                <span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
 
         <span class="n">_nan_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="p">(</span><span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span> <span class="o">+</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="o">*</span>
-                <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="p">,</span>
-                <span class="o">*</span>
-                <span class="n">_nan_locations</span><span class="p">))</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">_nan_locations</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
         <span class="n">avg</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">window</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="n">window</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="p">]</span>
         <span class="n">avgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg</span><span class="p">)</span>
 
     <span class="n">df_avgs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">avgs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
-    <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-     <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">avgs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">df_avgs</span></div>
 
 
@@ -218,58 +191,32 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data : pandas.core.frame.DataFrame</span>
-<span class="sd">        input Pandas dataframe</span>
-<span class="sd">    alpha : float</span>
-<span class="sd">        the smoothing parameter that defines the weighting. It should be between 0 and 1</span>
-<span class="sd">    newColumnNames : str</span>
-<span class="sd">        new column names after creating moving average dataframe</span>
-<span class="sd">    </span>
+<span class="sd">    data : pandas.core.frame.DataFrame input Pandas dataframe alpha : float the</span>
+<span class="sd">        smoothing parameter that defines the weighting. It should be between 0</span>
+<span class="sd">        and 1 newColumnNames : str new column names after creating moving</span>
+<span class="sd">        average dataframe</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pandas.core.frame.DataFrame</span>
-<span class="sd">        a Pandas dataframe contains exponential smoothing fits of the data</span>
+<span class="sd">    pandas.core.frame.DataFrame a Pandas dataframe contains exponential</span>
+<span class="sd">        smoothing fits of the data</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">                    High          Low         Open        Close      Volume    Adj Close</span>
-<span class="sd">    Date</span>
-<span class="sd">    2012-01-03  1284.619995  1258.859985  1258.859985  1277.060059  3943710000  1277.060059</span>
-<span class="sd">    2012-01-04  1278.729980  1268.099976  1277.030029  1277.300049  3592580000  1277.300049</span>
-<span class="sd">    2012-01-05  1283.050049  1265.260010  1277.300049  1281.060059  4315950000  1281.060059</span>
-<span class="sd">    2012-01-06  1281.839966  1273.339966  1280.930054  1277.810059  3656830000  1277.810059</span>
-<span class="sd">    2012-01-09  1281.989990  1274.550049  1277.829956  1280.699951  3371600000  1280.699951</span>
-<span class="sd">    ...                 ...          ...          ...          ...         ...          ...</span>
-<span class="sd">    2020-12-11  3665.909912  3633.399902  3656.080078  3663.459961  4367150000  3663.459961</span>
-<span class="sd">    2020-12-14  3697.610107  3645.840088  3675.270020  3647.489990  4594920000  3647.489990</span>
-<span class="sd">    2020-12-15  3695.290039  3659.620117  3666.409912  3694.620117  4360280000  3694.620117</span>
-<span class="sd">    2020-12-16  3711.270020  3688.570068  3696.250000  3701.169922  4056950000  3701.169922</span>
-<span class="sd">    2020-12-17  3725.120117  3710.870117  3713.649902  3722.479980  4184930000  3722.479980</span>
+<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) df</span>
 
-<span class="sd">    &gt;&gt;&gt; df_exponentialSmoothing = exponentialSmoothing(df,[&#39;exponentialSmoothing&#39;+ name for name in df.columns])</span>
-<span class="sd">    &gt;&gt;&gt; df_exponentialSmoothing</span>
-<span class="sd">                                exponentialSmoothingHigh exponentialSmoothingLow	exponentialSmoothingOpen	exponentialSmoothingClose	exponentialSmoothingVolume	exponentialSmoothingAdj Close</span>
-<span class="sd">    Date						</span>
-<span class="sd">    2012-01-03	                      1284.619995	         1258.859985	                1258.859985	                 1277.060059	         3.943710e+09	                1277.060059</span>
-<span class="sd">    2012-01-04	                      1282.852991	         1261.631982	                1264.310999	                 1277.132056	         3.838371e+09	                1277.132056</span>
-<span class="sd">    2012-01-05	                      1282.912108	         1262.720391	                1268.207714	                 1278.310457	         3.981645e+09	                1278.310457</span>
-<span class="sd">    2012-01-06	                      1282.590465	         1265.906263	                1272.024416	                 1278.160337	         3.884200e+09	                1278.160337</span>
-<span class="sd">    2012-01-09	                      1282.410323	         1268.499399	                1273.766078	                 1278.922221	         3.730420e+09	                1278.922221</span>
-<span class="sd">    ...	                                      ...	                 ...	                        ...	                         ...	                  ...	                        ...</span>
-<span class="sd">    2020-12-11	                      3683.080578	         3649.520587	                3668.977441	                 3671.981068	         4.714086e+09	                3671.981068</span>
-<span class="sd">    2020-12-14	                      3687.439437	         3648.416438	                3670.865215	                 3664.633745	         4.678337e+09	                3664.633745</span>
-<span class="sd">    2020-12-15	                      3689.794617	         3651.777541	                3669.528624	                 3673.629656	         4.582920e+09	                3673.629656</span>
-<span class="sd">    2020-12-16	                      3696.237238	         3662.815300	                3677.545037	                 3681.891736	         4.425129e+09	                3681.891736</span>
-<span class="sd">    2020-12-17	                      3704.902102	         3677.231745	                3688.376496	                 3694.068209	         4.353069e+09	                3694.068209</span>
+<span class="sd">    &gt;&gt;&gt; df_exponentialSmoothing =</span>
+<span class="sd">    &gt;&gt;&gt; exponentialSmoothing(df,[&#39;exponentialSmoothing&#39;+ name for name in</span>
+<span class="sd">    &gt;&gt;&gt; df.columns])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span><span class="p">)</span>
+            <span class="s2">&quot;Your input data cannot be converted to a pandas dataframe.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The value of alpha must between 0 and 1.&quot;</span><span class="p">)</span>
@@ -277,21 +224,25 @@
     <span class="n">smoothed</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string or a number &quot;</span> <span class="o">%</span>
-                <span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;Type of Column </span><span class="si">%s</span><span class="s2"> isn&#39;t a string </span><span class="se">\</span>
+<span class="s2">        or a number &quot;</span>
+                <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span>
-                <span class="n">name</span><span class="p">)</span>
+                <span class="s2">&quot;Column </span><span class="si">%s</span><span class="s2"> can&#39;t be converted to floating point&quot;</span> <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
 
         <span class="n">_nan_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">*</span><span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="o">*</span><span class="n">_nan_locations</span><span class="p">))</span>
-
-
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Column </span><span class="si">{}</span><span class="s2"> has Nan at &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="n">_nan_locations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">_nan_locations</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">pred</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -302,7 +253,9 @@
             <span class="n">pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">St</span><span class="p">)</span>
             <span class="n">St_prev</span> <span class="o">=</span> <span class="n">St</span>
         <span class="n">smoothed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
-    <span class="n">df_smoothed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">smoothed</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span><span class="p">)</span>
+    <span class="n">df_smoothed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">smoothed</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">newColumnNames</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">df_smoothed</span></div>
 
 
@@ -312,46 +265,61 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data : pandas.core.frame.DataFrame</span>
-<span class="sd">        input pandas dataframe of stock of interest</span>
-<span class="sd">    name : str</span>
-<span class="sd">        column to be used in moving average calculation (such as Close, Adj Close)</span>
-<span class="sd">    window : int</span>
-<span class="sd">        size of the window (number of days) used in moving average calculation</span>
-<span class="sd">        </span>
+<span class="sd">    data : pandas.core.frame.DataFrame input pandas dataframe of stock of</span>
+<span class="sd">        interest name : str column to be used in moving average calculation</span>
+<span class="sd">        (such as Close, Adj Close) window : int size of the window (number of</span>
+<span class="sd">        days) used in moving average calculation</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    altair.vegalite.v4.api.LayerChart</span>
-<span class="sd">        an Altair plot object containing the plot of original movement and the moving average of the stock of interest</span>
-<span class="sd">    </span>
+<span class="sd">    altair.vegalite.v4.api.LayerChart an Altair plot object containing the plot</span>
+<span class="sd">        of original movement and the moving average of the stock of interest</span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; visMovingAverage(df,&#39;Close&#39;, 50)</span>
+<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) visMovingAverage(df,&#39;Close&#39;, 50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input name does not match with the dataframe column name! Please enter valid column name!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Your input name does not match with the dataframe column name! </span><span class="se">\</span>
+<span class="s2">            Please enter valid column name!&quot;</span>
+        <span class="p">)</span>
 
-    <span class="n">df_avgs</span> <span class="o">=</span> <span class="n">movingAverage</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="p">[</span><span class="n">movingAverage</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-    
+    <span class="n">df_avgs</span> <span class="o">=</span> <span class="n">movingAverage</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="p">[</span><span class="n">movingAverage</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">index_name</span> <span class="o">=</span> <span class="s1">&#39;index&#39;</span>
+        <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">index_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="n">plot_a</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Stock Price History with Simple Moving Average&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Price&#39;</span><span class="p">),</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#0abab5&quot;</span><span class="p">)</span>
-    <span class="p">)</span>   
-    <span class="n">plot_b</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">df_avgs</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">movingAverage</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#00008b&quot;</span><span class="p">)</span>
-    <span class="p">)</span>    
-    
+    <span class="n">plot_a</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Stock Price History with Simple Moving Average&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">mark_line</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Price&quot;</span><span class="p">),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#0abab5&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">plot_b</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">df_avgs</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">mark_line</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">movingAverage</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#00008b&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
     <span class="n">sma_plot</span> <span class="o">=</span> <span class="n">plot_a</span> <span class="o">+</span> <span class="n">plot_b</span>
     <span class="k">return</span> <span class="n">sma_plot</span></div>
+
 
 <div class="viewcode-block" id="visExpSmoothing"><a class="viewcode-back" href="../../source/stock_analyzer.html#stock_analyzer.stock_analyzer.visExpSmoothing">[docs]</a><span class="k">def</span> <span class="nf">visExpSmoothing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -359,44 +327,61 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data : pandas.core.frame.DataFrame</span>
-<span class="sd">        input pandas dataframe of stock of interest</span>
-<span class="sd">    name : str</span>
-<span class="sd">        column to be used in exponential smoothing calculation (such as Close, Adj Close)</span>
-<span class="sd">    alpha :float</span>
-<span class="sd">        the smoothing parameter that defines the weighting. It should be between 0 and 1</span>
-<span class="sd">        </span>
+<span class="sd">    data : pandas.core.frame.DataFrame input pandas dataframe of stock of</span>
+<span class="sd">        interest name : str column to be used in exponential smoothing</span>
+<span class="sd">        calculation (such as Close, Adj Close) alpha :float the smoothing</span>
+<span class="sd">        parameter that defines the weighting. It should be between 0 and 1</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    altair.vegalite.v4.api.LayerChart</span>
-<span class="sd">        an Altair plot object containing the plot of original movement and the exponential smoothing of the stock of interest</span>
-<span class="sd">    </span>
+<span class="sd">    altair.vegalite.v4.api.LayerChart an Altair plot object containing the plot</span>
+<span class="sd">        of original movement and the exponential smoothing of the stock of</span>
+<span class="sd">        interest</span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;, end=&#39;2020-12-17&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; visExpSmoothing(df,&#39;Close&#39;, 0.3)</span>
+<span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) visExpSmoothing(df,&#39;Close&#39;, 0.3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Your input name does not match with the dataframe column name! Please enter valid column name!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Your input name does not match with the dataframe column name! </span><span class="se">\</span>
+<span class="s2">            Please enter valid column name!&quot;</span>
+        <span class="p">)</span>
 
-    <span class="n">df_smoothed</span> <span class="o">=</span> <span class="n">exponentialSmoothing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="n">exponentialSmoothing</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span> <span class="n">alpha</span><span class="p">)</span>
-    
+    <span class="n">df_smoothed</span> <span class="o">=</span> <span class="n">exponentialSmoothing</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">exponentialSmoothing</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="n">alpha</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">index_name</span> <span class="o">=</span> <span class="s1">&#39;index&#39;</span>
+        <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">index_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="n">plot_c</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Stock Price History with Exponential Smoothing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Price&#39;</span><span class="p">),</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#0abab5&quot;</span><span class="p">)</span>
-    <span class="p">)</span>   
-    <span class="n">plot_d</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">df_smoothed</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">exponentialSmoothing</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#00008b&quot;</span><span class="p">)</span>
-    <span class="p">)</span>    
-    
+    <span class="n">plot_c</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Stock Price History with Exponential Smoothing&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">mark_line</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Price&quot;</span><span class="p">),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#0abab5&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">plot_d</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">df_smoothed</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">mark_line</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">exponentialSmoothing</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s2">&quot;#00008b&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
     <span class="n">expsm_plot</span> <span class="o">=</span> <span class="n">plot_c</span> <span class="o">+</span> <span class="n">plot_d</span>
     <span class="k">return</span> <span class="n">expsm_plot</span></div>
 </pre></div>
