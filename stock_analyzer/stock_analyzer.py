@@ -157,7 +157,7 @@ def movingAverage(data, window, newColumnNames):
 
         values = np.insert(values, 0, [values[0] for i in range(window - 1)])
         avg = [
-            np.average(values[(i - window + 1) : (i + 1)])
+            np.average(values[(i - window + 1): (i + 1)])
             for i in range(window - 1, len(values))
         ]
         avgs.append(avg)
@@ -277,7 +277,7 @@ def visMovingAverage(data, name, window):
     Example
     -------
     >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01',
-    >>> end='2020-12-17')
+    ... end='2020-12-17')
     >>> visMovingAverage(df,'Close', 50)
     """
     if name not in data.columns:
@@ -341,7 +341,7 @@ def visExpSmoothing(data, name, alpha):
     Example
     -------
     >>> df = web.DataReader('^GSPC', data_source='yahoo', start='2012-01-01',
-    >>> end='2020-12-17')
+    ... end='2020-12-17')
     >>> visExpSmoothing(df,'Close', 0.3)
     """
     if name not in data.columns:
