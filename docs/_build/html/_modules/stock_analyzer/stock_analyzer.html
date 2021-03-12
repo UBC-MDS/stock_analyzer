@@ -134,11 +134,28 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from stock_analyzer import stock_analyzer</span>
+<span class="sd">    &gt;&gt;&gt; import pandas_datareader.data as web</span>
 <span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
-<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    ... end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; stock_analyzer.movingAverage(df,100,[&#39;movingAverage&#39;+ name for name</span>
+<span class="sd">    ... in df.columns])</span>
+<span class="sd">                movingAverageHigh  ...  movingAverageAdj Close</span>
+<span class="sd">    Date                           ...</span>
+<span class="sd">    2012-01-03        1284.619995  ...             1277.060059</span>
+<span class="sd">    2012-01-04        1284.561095  ...             1277.062458</span>
+<span class="sd">    2012-01-05        1284.545396  ...             1277.102458</span>
+<span class="sd">    2012-01-06        1284.517595  ...             1277.109958</span>
+<span class="sd">    2012-01-09        1284.491295  ...             1277.146357</span>
+<span class="sd">    ...                       ...  ...                     ...</span>
+<span class="sd">    2020-12-11        3459.242998  ...             3438.738198</span>
+<span class="sd">    2020-12-14        3463.419199  ...             3442.856499</span>
+<span class="sd">    2020-12-15        3468.099500  ...             3447.646401</span>
+<span class="sd">    2020-12-16        3472.797900  ...             3452.264001</span>
+<span class="sd">    2020-12-17        3477.611902  ...             3457.304402</span>
 
-<span class="sd">    &gt;&gt;&gt; df_movingAverage = movingAverage(df,100,[&#39;movingAverage&#39;+ name for name</span>
-<span class="sd">    &gt;&gt;&gt; in df.columns])</span>
+<span class="sd">    [2256 rows x 6 columns]</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -203,12 +220,27 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from stock_analyzer import stock_analyzer</span>
+<span class="sd">    &gt;&gt;&gt; import pandas_datareader.data as web</span>
 <span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
-<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) df</span>
+<span class="sd">    ... end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; stock_analyzer.exponentialSmoothing(df,[&#39;exponentialSmoothing&#39;+ name</span>
+<span class="sd">    ... for name in df.columns])</span>
+<span class="sd">                exponentialSmoothingHigh  ...  exponentialSmoothingAdj Close</span>
+<span class="sd">    Date                                  ...</span>
+<span class="sd">    2012-01-03               1284.619995  ...                    1277.060059</span>
+<span class="sd">    2012-01-04               1282.852991  ...                    1277.132056</span>
+<span class="sd">    2012-01-05               1282.912108  ...                    1278.310457</span>
+<span class="sd">    2012-01-06               1282.590465  ...                    1278.160337</span>
+<span class="sd">    2012-01-09               1282.410323  ...                    1278.922221</span>
+<span class="sd">    ...                              ...  ...                            ...</span>
+<span class="sd">    2020-12-11               3683.080578  ...                    3671.981068</span>
+<span class="sd">    2020-12-14               3687.439437  ...                    3664.633745</span>
+<span class="sd">    2020-12-15               3689.794617  ...                    3673.629656</span>
+<span class="sd">    2020-12-16               3696.237238  ...                    3681.891736</span>
+<span class="sd">    2020-12-17               3704.902102  ...                    3694.068209</span>
 
-<span class="sd">    &gt;&gt;&gt; df_exponentialSmoothing =</span>
-<span class="sd">    &gt;&gt;&gt; exponentialSmoothing(df,[&#39;exponentialSmoothing&#39;+ name for name in</span>
-<span class="sd">    &gt;&gt;&gt; df.columns])</span>
+<span class="sd">    [2256 rows x 6 columns]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -278,7 +310,8 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
-<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) visMovingAverage(df,&#39;Close&#39;, 50)</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; visMovingAverage(df,&#39;Close&#39;, 50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -341,7 +374,8 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; df = web.DataReader(&#39;^GSPC&#39;, data_source=&#39;yahoo&#39;, start=&#39;2012-01-01&#39;,</span>
-<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;) visExpSmoothing(df,&#39;Close&#39;, 0.3)</span>
+<span class="sd">    &gt;&gt;&gt; end=&#39;2020-12-17&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; visExpSmoothing(df,&#39;Close&#39;, 0.3)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>

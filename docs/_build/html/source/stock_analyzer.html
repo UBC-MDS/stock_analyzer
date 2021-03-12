@@ -55,15 +55,28 @@ average dataframe</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span> <span class="n">df</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stock_analyzer</span> <span class="kn">import</span> <span class="n">stock_analyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="nn">web</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stock_analyzer</span><span class="o">.</span><span class="n">exponentialSmoothing</span><span class="p">(</span><span class="n">df</span><span class="p">,[</span><span class="s1">&#39;exponentialSmoothing&#39;</span><span class="o">+</span> <span class="n">name</span>
+<span class="gp">... </span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+<span class="go">            exponentialSmoothingHigh  ...  exponentialSmoothingAdj Close</span>
+<span class="go">Date                                  ...</span>
+<span class="go">2012-01-03               1284.619995  ...                    1277.060059</span>
+<span class="go">2012-01-04               1282.852991  ...                    1277.132056</span>
+<span class="go">2012-01-05               1282.912108  ...                    1278.310457</span>
+<span class="go">2012-01-06               1282.590465  ...                    1278.160337</span>
+<span class="go">2012-01-09               1282.410323  ...                    1278.922221</span>
+<span class="gp">... </span>                             <span class="o">...</span>  <span class="o">...</span>                            <span class="o">...</span>
+<span class="go">2020-12-11               3683.080578  ...                    3671.981068</span>
+<span class="go">2020-12-14               3687.439437  ...                    3664.633745</span>
+<span class="go">2020-12-15               3689.794617  ...                    3673.629656</span>
+<span class="go">2020-12-16               3696.237238  ...                    3681.891736</span>
+<span class="go">2020-12-17               3704.902102  ...                    3694.068209</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_exponentialSmoothing</span> <span class="o">=</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">exponentialSmoothing</span><span class="p">(</span><span class="n">df</span><span class="p">,[</span><span class="s1">&#39;exponentialSmoothing&#39;</span><span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-</pre></div>
-</div>
+<p>[2256 rows x 6 columns]</p>
 </dd></dl>
 
 <dl class="py function">
@@ -83,14 +96,28 @@ str new column names after creating moving average dataframe</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stock_analyzer</span> <span class="kn">import</span> <span class="n">stock_analyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="nn">web</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stock_analyzer</span><span class="o">.</span><span class="n">movingAverage</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="mi">100</span><span class="p">,[</span><span class="s1">&#39;movingAverage&#39;</span><span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span>
+<span class="gp">... </span><span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+<span class="go">            movingAverageHigh  ...  movingAverageAdj Close</span>
+<span class="go">Date                           ...</span>
+<span class="go">2012-01-03        1284.619995  ...             1277.060059</span>
+<span class="go">2012-01-04        1284.561095  ...             1277.062458</span>
+<span class="go">2012-01-05        1284.545396  ...             1277.102458</span>
+<span class="go">2012-01-06        1284.517595  ...             1277.109958</span>
+<span class="go">2012-01-09        1284.491295  ...             1277.146357</span>
+<span class="gp">... </span>                      <span class="o">...</span>  <span class="o">...</span>                     <span class="o">...</span>
+<span class="go">2020-12-11        3459.242998  ...             3438.738198</span>
+<span class="go">2020-12-14        3463.419199  ...             3442.856499</span>
+<span class="go">2020-12-15        3468.099500  ...             3447.646401</span>
+<span class="go">2020-12-16        3472.797900  ...             3452.264001</span>
+<span class="go">2020-12-17        3477.611902  ...             3457.304402</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_movingAverage</span> <span class="o">=</span> <span class="n">movingAverage</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="mi">100</span><span class="p">,[</span><span class="s1">&#39;movingAverage&#39;</span><span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-</pre></div>
-</div>
+<p>[2256 rows x 6 columns]</p>
 </dd></dl>
 
 <dl class="py function">
@@ -148,7 +175,8 @@ interest</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span> <span class="n">visExpSmoothing</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s1">&#39;Close&#39;</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">visExpSmoothing</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s1">&#39;Close&#39;</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -172,7 +200,8 @@ days) used in moving average calculation</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span> <span class="n">visMovingAverage</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s1">&#39;Close&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-12-17&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">visMovingAverage</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="s1">&#39;Close&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
