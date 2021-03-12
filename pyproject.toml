@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stock_analyzer"
-version = "0.1.5"
+version = "0.1.6"
 description = "Python package that analyzes stocks!"
 authors = ["tingyu00 <zoezhang0408@gmail.com>"]
 license = "MIT"
