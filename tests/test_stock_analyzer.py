@@ -3,6 +3,7 @@ from pytest import raises
 import pandas as pd
 import numpy as np
 
+
 def test_SummaryStats():
 
     # Wrong type of input
